@@ -9,8 +9,17 @@ const cloudRedirectValue = document.getElementById('cloudRedirectValue');
 const cloudAuthUrlValue = document.getElementById('cloudAuthUrlValue');
 
 // Get the current origin for OAuth setup
+// For GitHub Pages: https://d754mk647p-cyber.github.io/Attendance-tracker
+// For local: http://localhost:8000
 const currentOrigin = window.location.origin;
-const redirectUri = `${currentOrigin}/callback.html`;
+const pathname = window.location.pathname;
+
+// Build the redirect URI correctly
+// If on GitHub Pages, include the repo path; otherwise just use origin
+const isGitHubPages = currentOrigin.includes('github.io');
+const redirectUri = isGitHubPages 
+  ? `${currentOrigin}${pathname}/callback.html`
+  : `${currentOrigin}/callback.html`;
 
 // Set up display values for OAuth configuration
 if (cloudOriginValue) cloudOriginValue.value = currentOrigin;
