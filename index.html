@@ -48,7 +48,7 @@
     }
 
     .wrap {
-      max-width: 1200px;
+      max-width: 1440px;
       margin: 0 auto;
     }
 
@@ -82,7 +82,7 @@
     }
 
     .app {
-      max-width: 1200px;
+      max-width: 1440px;
       margin: 24px auto 42px;
       padding: 0 20px;
     }
@@ -159,6 +159,7 @@
     }
 
     .filters,
+    .team-form,
     .manual-form {
       display: grid;
       gap: 12px;
@@ -171,6 +172,11 @@
 
     .manual-form {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .team-form {
+      grid-template-columns: 2fr 1fr auto auto;
+      margin-bottom: 12px;
     }
 
     .form-actions {
@@ -259,6 +265,12 @@
 
     .compact-input {
       max-width: 120px;
+    }
+
+    .compact-select {
+      min-width: 0;
+      padding-left: 8px;
+      padding-right: 8px;
     }
 
     input[type="date"],
@@ -433,6 +445,96 @@
       box-shadow: none;
     }
 
+    #summaryView table {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #summaryView th,
+    #summaryView td {
+      white-space: nowrap;
+    }
+
+    #bucketView table {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #bucketView th,
+    #bucketView td {
+      white-space: nowrap;
+    }
+
+    #bucketView .name-button {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #waveTeamsTable {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #waveTeamsTable th,
+    #waveTeamsTable td {
+      white-space: nowrap;
+    }
+
+    .cap-layout {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) 430px;
+      align-items: start;
+    }
+
+    #capView table,
+    #capLegendTable {
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    #capView th,
+    #capView td,
+    #capLegendTable th,
+    #capLegendTable td {
+      white-space: nowrap;
+    }
+
+    .cap-note-input {
+      min-width: 220px;
+    }
+
+    .cap-scale-cell {
+      font-weight: 700;
+    }
+
+    .cap-coaching {
+      background: #d9ead3;
+      color: #12220f;
+    }
+
+    .cap-verbal {
+      background: #fce4d6;
+      color: #29130a;
+    }
+
+    .cap-written {
+      background: #fff2cc;
+      color: #2a2104;
+    }
+
+    .cap-final {
+      background: #c65911;
+      color: #fff;
+    }
+
+    .cap-termination {
+      background: #ff0000;
+      color: #fff;
+    }
+
     th,
     td {
       border-bottom: 1px solid var(--border);
@@ -461,6 +563,22 @@
 
     tbody tr.bucket-row:hover {
       background: rgba(245, 200, 75, 0.22);
+    }
+
+    tbody tr.dropoff-row {
+      background: rgba(74, 144, 217, 0.16);
+    }
+
+    tbody tr.dropoff-row:hover {
+      background: rgba(74, 144, 217, 0.24);
+    }
+
+    tbody tr.bucket-row.dropoff-row {
+      background: linear-gradient(90deg, rgba(74, 144, 217, 0.22), rgba(245, 200, 75, 0.14));
+    }
+
+    tbody tr.bucket-row.dropoff-row:hover {
+      background: linear-gradient(90deg, rgba(74, 144, 217, 0.3), rgba(245, 200, 75, 0.2));
     }
 
     tbody tr:last-child td {
@@ -574,7 +692,8 @@
       display: flex;
       justify-content: center;
       left: 0;
-      padding: 20px;
+      overflow-y: auto;
+      padding: 14px;
       position: fixed;
       right: 0;
       top: 0;
@@ -586,8 +705,11 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       box-shadow: var(--shadow);
+      max-height: calc(100vh - 28px);
       max-width: 440px;
-      padding: 18px;
+      overflow-y: auto;
+      padding: 14px;
+      scrollbar-gutter: stable;
       width: 100%;
     }
 
@@ -595,21 +717,50 @@
       max-width: 980px;
     }
 
+    .modal .panel-title {
+      margin-bottom: 10px;
+    }
+
+    .modal-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
     .modal h2 {
       font-size: 18px;
-      margin: 0 0 14px;
+      margin: 0 0 10px;
+    }
+
+    .modal .tabs {
+      margin-bottom: 10px;
+    }
+
+    .modal .filters {
+      gap: 8px;
+    }
+
+    .modal .table-wrap {
+      max-height: min(46vh, 430px);
+      overflow: auto;
+    }
+
+    .modal th,
+    .modal td {
+      padding: 8px 10px;
     }
 
     .modal-actions {
       display: flex;
       gap: 10px;
       justify-content: flex-end;
-      margin-top: 16px;
+      margin-top: 12px;
     }
 
     .modal-grid {
       display: grid;
-      gap: 10px;
+      gap: 8px;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -628,7 +779,9 @@
     @media (max-width: 900px) {
       .hero-inner,
       .stats,
+      .cap-layout,
       .filters,
+      .team-form,
       .manual-form,
       .cloud-grid,
       .cloud-setup {
@@ -710,7 +863,7 @@
           <span>Auto-sync changes</span>
         </label>
       </div>
-      <div class="cloud-setup">
+      <div class="cloud-setup hidden">
         <div>
           <label for="cloudOriginValue">Authorized JavaScript origin</label>
           <div class="cloud-readonly">
@@ -755,6 +908,38 @@
       </div>
     </section>
 
+    <section class="panel" aria-label="Wave team settings">
+      <div class="panel-title">
+        <h2>Wave Teams</h2>
+        <span id="waveTeamStatus" class="muted" aria-live="polite"></span>
+      </div>
+      <form id="waveTeamForm" class="team-form">
+        <input id="waveTeamKey" type="hidden">
+        <div>
+          <label for="waveTeamName">Team Name</label>
+          <input id="waveTeamName" type="text" autocomplete="off" required>
+        </div>
+        <div>
+          <label for="waveTeamDate">Wave Date</label>
+          <input id="waveTeamDate" type="date" required>
+        </div>
+        <button class="primary" id="saveWaveTeamBtn" type="submit">Save Team</button>
+        <button class="secondary" id="newWaveTeamBtn" type="button">New Team</button>
+      </form>
+      <div class="table-wrap">
+        <table id="waveTeamsTable" aria-label="Wave teams">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Wave Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="waveTeamsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="panel" aria-label="Add attendance record">
       <div class="panel-title">
         <h2>Add Record</h2>
@@ -764,6 +949,15 @@
         <div>
           <label for="manualName">Employee Name</label>
           <input id="manualName" type="text" autocomplete="off" required>
+        </div>
+        <div>
+          <label for="manualTeam">Wave Team</label>
+          <select id="manualTeam">
+            <option value="">Unassigned</option>
+            <option value="alicias">Alicia's Team</option>
+            <option value="aliciasPt2">Alicia's Team PT.2</option>
+            <option value="taylors">Taylor's Team</option>
+          </select>
         </div>
         <div>
           <label for="manualDate">Date</label>
@@ -869,6 +1063,7 @@
       <div class="tabs" role="tablist" aria-label="Attendance views">
         <button class="tab-button" id="recordsTab" type="button" role="tab" aria-selected="false" data-view="records">Records</button>
         <button class="tab-button active" id="summaryTab" type="button" role="tab" aria-selected="true" data-view="summary">Point Summary by Agent</button>
+        <button class="tab-button" id="capTab" type="button" role="tab" aria-selected="false" data-view="cap">CAP Tracker</button>
         <button class="tab-button" id="bucketTab" type="button" role="tab" aria-selected="false" data-view="bucket">Bucket</button>
       </div>
 
@@ -917,15 +1112,86 @@
         <div id="summaryEmpty" class="empty hidden">No summary rows match the current filters.</div>
       </div>
 
+      <div id="capView" class="hidden" role="tabpanel" aria-labelledby="capTab">
+        <div class="cap-layout">
+          <div>
+            <div class="table-wrap">
+              <table aria-label="CAP tracker">
+                <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Sup</th>
+                    <th>Total Points</th>
+                    <th>Curr CAP Level</th>
+                    <th>Issue Date</th>
+                    <th>CAP they need to be on</th>
+                  </tr>
+                </thead>
+                <tbody id="capBody"></tbody>
+              </table>
+            </div>
+            <div id="capEmpty" class="empty hidden">No CAP rows match the current filters.</div>
+          </div>
+          <div class="table-wrap">
+            <table id="capLegendTable" aria-label="CAP color scale legend">
+              <thead>
+                <tr>
+                  <th>Color Scale</th>
+                  <th>Guidelines for Points</th>
+                  <th>Type of Warning</th>
+                  <th>Duration of Corrective Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cap-coaching"></td>
+                  <td>0.5 - 2 points</td>
+                  <td>Coaching</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="cap-verbal"></td>
+                  <td>&gt; 2 points</td>
+                  <td>Verbal</td>
+                  <td>30 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-written"></td>
+                  <td>6 points</td>
+                  <td>Written</td>
+                  <td>60 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-final"></td>
+                  <td>9 points</td>
+                  <td>Final</td>
+                  <td>30 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-termination"></td>
+                  <td>12 points</td>
+                  <td>Termination</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <div id="bucketView" class="hidden" role="tabpanel" aria-labelledby="bucketTab">
         <div class="table-wrap">
           <table aria-label="Approved time off bucket by employee">
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Approved Days</th>
-                <th>Bucket Occurrences</th>
-                <th>Remaining Days</th>
+                <th>Wave Team</th>
+                <th>Wave Date</th>
+                <th>PTO</th>
+                <th>ATO</th>
+                <th>Total</th>
+                <th>Used</th>
+                <th>Remaining</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -962,7 +1228,10 @@
     <section class="modal wide">
       <div class="panel-title">
         <h2 id="employeeModalTitle">Employee Occurrences</h2>
-        <button class="secondary" id="closeEmployeeModalBtn" type="button">Close</button>
+        <div class="modal-header-actions">
+          <button class="danger" id="deleteAgentBtn" type="button">Delete Agent</button>
+          <button class="secondary" id="closeEmployeeModalBtn" type="button">Close</button>
+        </div>
       </div>
       <p id="employeeModalSummary" class="muted"></p>
       <input id="employeeModalName" type="hidden">
@@ -993,8 +1262,25 @@
       <div id="employeeBucketView" class="hidden" role="tabpanel" aria-labelledby="employeeBucketTab">
         <div class="filters">
           <div>
-            <label for="employeeBucketDays">Approved Days</label>
-            <input id="employeeBucketDays" type="number" min="0" step="0.25">
+            <label for="employeeBucketTeam">Wave Team</label>
+            <select id="employeeBucketTeam">
+              <option value="">Unassigned</option>
+              <option value="alicias">Alicia's Team</option>
+              <option value="aliciasPt2">Alicia's Team PT.2</option>
+              <option value="taylors">Taylor's Team</option>
+            </select>
+          </div>
+          <div>
+            <label>Wave Date</label>
+            <p id="employeeBucketWave" class="muted"></p>
+          </div>
+          <div>
+            <label for="employeeBucketDays">Total Bucket Days</label>
+            <input id="employeeBucketDays" type="text" readonly>
+          </div>
+          <div>
+            <label>PTO / ATO</label>
+            <p id="employeeBucketAccrual" class="muted"></p>
           </div>
           <div>
             <label>Bucket Status</label>
@@ -1135,14 +1421,18 @@
 
       var STORAGE_KEY = 'attendanceTrackerSavedRowsV4';
       var BUCKET_STORAGE_KEY = 'attendanceTrackerBucketsV1';
+      var TEAM_STORAGE_KEY = 'attendanceTrackerWaveTeamsV1';
+      var CAP_STORAGE_KEY = 'attendanceTrackerCapSettingsV1';
       var CLOUD_CONFIG_KEY = 'attendanceTrackerCloudConfigV1';
       var CLOUD_TOKEN_KEY = 'attendanceTrackerCloudTokenV1';
       var CLOUD_AUTH_STATE_KEY = 'attendanceTrackerCloudAuthStateV1';
+      var TEAM_REFERENCE_SPREADSHEET_ID = '1YDXgyILiIO_c6n0cgN_Yy5vrMBUIQMXOvE8WvDq0peU';
       var rows = [];
       var buckets = {};
+      var capSettings = {};
       var cloudConfig = {
         clientId: '',
-        spreadsheetId: '',
+        spreadsheetId: TEAM_REFERENCE_SPREADSHEET_ID,
         autoSync: false
       };
       var cloudTokenClient = null;
@@ -1170,6 +1460,23 @@
         cluster: { label: 'Cluster', badge: 'cluster' }
       };
       var FOLLOW_UP_VALUES = Object.keys(FOLLOW_UP_CONFIG);
+      var DEFAULT_TEAM_CONFIG = {
+        alicias: { label: "Alicia's Team", waveDate: '2025-10-01' },
+        aliciasPt2: { label: "Alicia's Team PT.2", waveDate: '2025-08-01' },
+        taylors: { label: "Taylor's Team", waveDate: '2026-05-01' }
+      };
+      var TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+      var FIRST_YEAR_PTO_DAYS = 5;
+      var FIRST_YEAR_ATO_DAYS = 12;
+      var AFTER_YEAR_PTO_DAYS = 12;
+      var AFTER_YEAR_ATO_DAYS = 5;
+      var CAP_LEVELS = [
+        { label: 'Termination', min: 12, className: 'cap-termination', duration: '' },
+        { label: 'Final', min: 9, className: 'cap-final', duration: '30 days' },
+        { label: 'Written', min: 6, className: 'cap-written', duration: '60 days' },
+        { label: 'Verbal', min: 2.000001, className: 'cap-verbal', duration: '30 days' },
+        { label: 'Coaching', min: 0.5, className: 'cap-coaching', duration: '' }
+      ];
 
       var aliases = {
         name: ['name', 'agent', 'agent name', 'employee', 'employee name', 'employee full name', 'full name', 'team member', 'team member name', 'associate', 'associate name', 'rep', 'representative', 'csr', 'advisor', 'advocate', 'specialist', 'person', 'person name'],
@@ -1180,7 +1487,9 @@
         endTime: ['end time', 'end', 'to', 'stop', 'stop time', 'time end', 'endtime'],
         points: ['points', 'point', 'occurrence points', 'attendance points', 'pts'],
         followUp: ['flag', 'follow up', 'follow-up', 'followup', 'point status', 'policy status', 'drop off status', 'give back status', 'cluster'],
-        followUpMonth: ['flag month', 'give back month', '30 day month', 'thirty day month', 'follow up month', 'follow-up month']
+        followUpMonth: ['flag month', 'give back month', '30 day month', 'thirty day month', 'follow up month', 'follow-up month'],
+        team: ['team', 'wave team', 'employee team', 'manager team', 'supervisor team', 'group', 'department', 'manager', 'supervisor'],
+        waveDate: ['wave date', 'hire date', 'start date', 'company start date', 'seniority date', 'tenure date']
       };
 
       var fuzzyTokens = {
@@ -1192,10 +1501,12 @@
         endTime: ['end', 'to', 'stop', 'endtime'],
         points: ['point', 'points', 'pts'],
         followUp: ['flag', 'follow', 'giveback', 'dropoff', 'cluster', 'policy'],
-        followUpMonth: ['month', 'givebackmonth', 'flagmonth']
+        followUpMonth: ['month', 'givebackmonth', 'flagmonth'],
+        team: ['team', 'group', 'department', 'manager', 'supervisor'],
+        waveDate: ['wave', 'hire', 'seniority', 'tenure']
       };
 
-      var fields = ['name', 'date', 'code', 'reason', 'startTime', 'endTime', 'points', 'followUp', 'followUpMonth'];
+      var fields = ['name', 'date', 'code', 'reason', 'startTime', 'endTime', 'points', 'followUp', 'followUpMonth', 'team', 'waveDate'];
       var aliasSets = {};
 
       fields.forEach(function (field) {
@@ -1224,9 +1535,18 @@
         cloudAuthUrlValue: document.getElementById('cloudAuthUrlValue'),
         copyCloudAuthUrlBtn: document.getElementById('copyCloudAuthUrlBtn'),
         cloudStatus: document.getElementById('cloudStatus'),
+        waveTeamForm: document.getElementById('waveTeamForm'),
+        waveTeamKey: document.getElementById('waveTeamKey'),
+        waveTeamName: document.getElementById('waveTeamName'),
+        waveTeamDate: document.getElementById('waveTeamDate'),
+        waveTeamStatus: document.getElementById('waveTeamStatus'),
+        saveWaveTeamBtn: document.getElementById('saveWaveTeamBtn'),
+        newWaveTeamBtn: document.getElementById('newWaveTeamBtn'),
+        waveTeamsBody: document.getElementById('waveTeamsBody'),
         manualForm: document.getElementById('manualForm'),
         manualStatus: document.getElementById('manualStatus'),
         manualName: document.getElementById('manualName'),
+        manualTeam: document.getElementById('manualTeam'),
         manualDate: document.getElementById('manualDate'),
         manualCode: document.getElementById('manualCode'),
         manualPoints: document.getElementById('manualPoints'),
@@ -1251,14 +1571,18 @@
         clearFiltersBtn: document.getElementById('clearFiltersBtn'),
         recordsTab: document.getElementById('recordsTab'),
         summaryTab: document.getElementById('summaryTab'),
+        capTab: document.getElementById('capTab'),
         bucketTab: document.getElementById('bucketTab'),
         recordsView: document.getElementById('recordsView'),
         summaryView: document.getElementById('summaryView'),
+        capView: document.getElementById('capView'),
         bucketView: document.getElementById('bucketView'),
         recordsBody: document.getElementById('recordsBody'),
         recordsEmpty: document.getElementById('recordsEmpty'),
         summaryBody: document.getElementById('summaryBody'),
         summaryEmpty: document.getElementById('summaryEmpty'),
+        capBody: document.getElementById('capBody'),
+        capEmpty: document.getElementById('capEmpty'),
         bucketBody: document.getElementById('bucketBody'),
         bucketEmpty: document.getElementById('bucketEmpty'),
         editModal: document.getElementById('editModal'),
@@ -1279,11 +1603,15 @@
         employeeOccurrencesView: document.getElementById('employeeOccurrencesView'),
         employeeBucketView: document.getElementById('employeeBucketView'),
         employeeOccurrencesBody: document.getElementById('employeeOccurrencesBody'),
+        employeeBucketTeam: document.getElementById('employeeBucketTeam'),
+        employeeBucketWave: document.getElementById('employeeBucketWave'),
         employeeBucketDays: document.getElementById('employeeBucketDays'),
+        employeeBucketAccrual: document.getElementById('employeeBucketAccrual'),
         employeeBucketSummary: document.getElementById('employeeBucketSummary'),
         employeeBucketOccurrencesBody: document.getElementById('employeeBucketOccurrencesBody'),
         employeeBucketOccurrencesEmpty: document.getElementById('employeeBucketOccurrencesEmpty'),
         saveEmployeeBucketBtn: document.getElementById('saveEmployeeBucketBtn'),
+        deleteAgentBtn: document.getElementById('deleteAgentBtn'),
         closeEmployeeModalBtn: document.getElementById('closeEmployeeModalBtn'),
         occurrenceModal: document.getElementById('occurrenceModal'),
         occurrenceForm: document.getElementById('occurrenceForm'),
@@ -1544,21 +1872,258 @@
         return number.toLocaleString(undefined, { maximumFractionDigits: 3 });
       }
 
+      function formatBucketDays(value) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) return '0';
+        return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+      }
+
+      function roundBucketDays(value) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) return 0;
+        return Math.round(number * 100) / 100;
+      }
+
+      function normalizeWaveDate(value) {
+        var parsed = parseDate(value);
+        return parsed && !isNaN(parsed) ? dateKey(parsed) : '';
+      }
+
+      function formatWaveDate(value) {
+        var parsed = parseDate(value);
+        return parsed && !isNaN(parsed) ? formatDate(parsed) : '';
+      }
+
+      function cloneTeamConfig(source) {
+        var copy = {};
+        Object.keys(source || {}).forEach(function (key) {
+          copy[key] = {
+            label: toText(source[key].label),
+            waveDate: normalizeWaveDate(source[key].waveDate)
+          };
+        });
+        return copy;
+      }
+
+      function teamValues() {
+        return Object.keys(TEAM_CONFIG).sort(function (a, b) {
+          return teamLabel(a).localeCompare(teamLabel(b), undefined, { sensitivity: 'base' });
+        });
+      }
+
+      function makeTeamKey(label) {
+        var base = cleanHeader(label).replace(/\s+/g, '');
+        if (!base) base = 'team';
+        var key = base;
+        var suffix = 2;
+        while (TEAM_CONFIG[key]) {
+          key = base + suffix;
+          suffix += 1;
+        }
+        return key;
+      }
+
+      function normalizeTeam(value) {
+        if (TEAM_CONFIG[value]) return value;
+        var normalized = norm(value);
+        var compact = normalized.replace(/\s+/g, '');
+        if (!compact) return '';
+        var keys = Object.keys(TEAM_CONFIG);
+        for (var i = 0; i < keys.length; i += 1) {
+          var key = keys[i];
+          var label = norm(TEAM_CONFIG[key].label);
+          if (norm(key) === normalized || label === normalized || label.replace(/\s+/g, '') === compact) return key;
+        }
+        var looksLikeAlicia = compact.indexOf('alicia') !== -1 || compact.indexOf('aclia') !== -1;
+        if (looksLikeAlicia && (compact.indexOf('pt2') !== -1 || compact.indexOf('part2') !== -1 || compact.indexOf('2') !== -1)) return 'aliciasPt2';
+        if (looksLikeAlicia) return 'alicias';
+        if (compact.indexOf('taylor') !== -1) return 'taylors';
+        return '';
+      }
+
+      function inferTeam(sourceFile, sourceSheet) {
+        return normalizeTeam([sourceFile, sourceSheet].filter(Boolean).join(' '));
+      }
+
+      function teamLabel(value) {
+        var team = normalizeTeam(value);
+        return team && TEAM_CONFIG[team] ? TEAM_CONFIG[team].label : '';
+      }
+
+      function teamWaveDate(value) {
+        var team = normalizeTeam(value);
+        return team && TEAM_CONFIG[team] ? TEAM_CONFIG[team].waveDate : '';
+      }
+
+      function teamFromWaveDate(value) {
+        var normalizedDate = normalizeWaveDate(value);
+        if (!normalizedDate) return '';
+        var keys = teamValues();
+        for (var i = 0; i < keys.length; i += 1) {
+          if (TEAM_CONFIG[keys[i]].waveDate === normalizedDate) return keys[i];
+        }
+        return '';
+      }
+
+      function teamSelectOptions(selectedTeam) {
+        var selected = normalizeTeam(selectedTeam);
+        var options = ['<option value="">Unassigned</option>'];
+        teamValues().forEach(function (team) {
+          options.push('<option value="' + escapeHtml(team) + '"' + (team === selected ? ' selected' : '') + '>' + escapeHtml(TEAM_CONFIG[team].label) + '</option>');
+        });
+        return options.join('');
+      }
+
+      function refreshTeamSelectOptions() {
+        var manualValue = els.manualTeam ? els.manualTeam.value : '';
+        if (els.manualTeam) els.manualTeam.innerHTML = teamSelectOptions(manualValue);
+        var employeeValue = els.employeeBucketTeam ? els.employeeBucketTeam.value : '';
+        if (els.employeeBucketTeam) els.employeeBucketTeam.innerHTML = teamSelectOptions(employeeValue);
+      }
+
+      function todayMidnight() {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      }
+
+      function addYears(date, years) {
+        var next = new Date(date.getFullYear() + years, date.getMonth(), date.getDate());
+        if (next.getMonth() !== date.getMonth()) next.setDate(0);
+        next.setHours(0, 0, 0, 0);
+        return next;
+      }
+
+      function daysBetween(start, end) {
+        return Math.max(0, (end.getTime() - start.getTime()) / 86400000);
+      }
+
+      function calculateBucketAccrual(waveDateValue) {
+        var waveDate = parseDate(waveDateValue);
+        if (!(waveDate instanceof Date) || isNaN(waveDate)) {
+          return { hasWaveDate: false, ptoDays: 0, atoDays: 0, totalDays: 0 };
+        }
+
+        var today = todayMidnight();
+        waveDate.setHours(0, 0, 0, 0);
+        if (today <= waveDate) {
+          return { hasWaveDate: true, ptoDays: 0, atoDays: 0, totalDays: 0 };
+        }
+
+        var firstAnniversary = addYears(waveDate, 1);
+        var firstPeriodEnd = today < firstAnniversary ? today : firstAnniversary;
+        var firstYearDays = daysBetween(waveDate, firstPeriodEnd);
+        var afterFirstYearDays = today > firstAnniversary ? daysBetween(firstAnniversary, today) : 0;
+        var ptoDays = (firstYearDays / 365 * FIRST_YEAR_PTO_DAYS) + (afterFirstYearDays / 365 * AFTER_YEAR_PTO_DAYS);
+        var atoDays = (firstYearDays / 365 * FIRST_YEAR_ATO_DAYS) + (afterFirstYearDays / 365 * AFTER_YEAR_ATO_DAYS);
+
+        ptoDays = roundBucketDays(ptoDays);
+        atoDays = roundBucketDays(atoDays);
+        return {
+          hasWaveDate: true,
+          ptoDays: ptoDays,
+          atoDays: atoDays,
+          totalDays: roundBucketDays(ptoDays + atoDays)
+        };
+      }
+
       function bucketKey(name) {
         return norm(name);
       }
 
+      function capKey(name) {
+        return bucketKey(name);
+      }
+
+      function sameEmployeeName(first, second) {
+        var firstKey = bucketKey(first);
+        var secondKey = bucketKey(second);
+        return Boolean(firstKey && secondKey && firstKey === secondKey);
+      }
+
+      function preferredEmployeeDisplayName(row) {
+        return toText(row && (row.originalName || row.displayName || row.name));
+      }
+
+      function rememberEmployeeName(map, name, preferred) {
+        var key = bucketKey(name);
+        if (!key) return;
+        var candidate = toText(preferred || name);
+        if (!candidate) return;
+        if (!map[key]) {
+          map[key] = candidate;
+          return;
+        }
+        var current = map[key];
+        if (current === current.toLowerCase() && candidate !== candidate.toLowerCase()) {
+          map[key] = candidate;
+        }
+      }
+
       function getBucket(name) {
         var key = bucketKey(name);
-        if (!key) return { days: 0 };
-        if (!buckets[key]) buckets[key] = { name: name, days: 0 };
+        if (!key) return { name: '', days: 0, team: '', waveDate: '' };
+        if (!buckets[key]) buckets[key] = { name: name, days: 0, team: '', waveDate: '' };
         if (!buckets[key].name) buckets[key].name = name;
         buckets[key].days = Number(buckets[key].days) || 0;
+        buckets[key].team = normalizeTeam(buckets[key].team);
+        buckets[key].waveDate = normalizeWaveDate(buckets[key].waveDate) || teamWaveDate(buckets[key].team);
         return buckets[key];
       }
 
+      function employeeSourceBucketInfo(name) {
+        var targetKey = bucketKey(name);
+        var exactRows = rows.filter(function (row) {
+          return bucketKey(row.name) === targetKey || bucketKey(row.originalName) === targetKey;
+        });
+        for (var i = 0; i < exactRows.length; i += 1) {
+          var rowTeam = normalizeTeam(exactRows[i].team);
+          var rowWaveDate = normalizeWaveDate(exactRows[i].waveDate);
+          if (rowTeam || rowWaveDate) {
+            return {
+              team: rowTeam || teamFromWaveDate(rowWaveDate),
+              waveDate: rowTeam ? teamWaveDate(rowTeam) : rowWaveDate
+            };
+          }
+        }
+        for (var j = 0; j < exactRows.length; j += 1) {
+          var inferred = inferTeam(exactRows[j].sourceFile, exactRows[j].sourceSheet);
+          if (inferred) {
+            return {
+              team: inferred,
+              waveDate: teamWaveDate(inferred)
+            };
+          }
+        }
+        return { team: '', waveDate: '' };
+      }
+
+      function employeeBucketInfo(name) {
+        var bucket = getBucket(name);
+        var source = employeeSourceBucketInfo(name);
+        var team = normalizeTeam(bucket.team) || source.team;
+        var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(bucket.waveDate) || source.waveDate;
+        if (!team) team = teamFromWaveDate(waveDate);
+        if (!waveDate) waveDate = teamWaveDate(team);
+        var accrual = calculateBucketAccrual(waveDate);
+        var legacyDays = Number(bucket.days) || 0;
+        var totalDays = accrual.hasWaveDate ? accrual.totalDays : legacyDays;
+        return {
+          name: name,
+          team: team,
+          teamLabel: teamLabel(team),
+          waveDate: normalizeWaveDate(waveDate),
+          waveDateLabel: formatWaveDate(waveDate),
+          ptoDays: accrual.ptoDays,
+          atoDays: accrual.atoDays,
+          totalDays: totalDays,
+          legacyDays: legacyDays,
+          hasWaveDate: accrual.hasWaveDate
+        };
+      }
+
       function bucketDays(name) {
-        return Number(getBucket(name).days) || 0;
+        return employeeBucketInfo(name).totalDays;
       }
 
       function setBucketDays(name, value) {
@@ -1570,15 +2135,90 @@
         saveBucketData();
       }
 
+      function getCapSetting(name) {
+        var key = capKey(name);
+        if (!key) return { issueDate: '', neededNote: '' };
+        if (!capSettings[key]) capSettings[key] = { name: name, issueDate: '', neededNote: '' };
+        if (!capSettings[key].name) capSettings[key].name = name;
+        capSettings[key].issueDate = normalizeWaveDate(capSettings[key].issueDate);
+        capSettings[key].neededNote = toText(capSettings[key].neededNote);
+        return capSettings[key];
+      }
+
+      function capLevelForPoints(points) {
+        var value = Number(points) || 0;
+        for (var i = 0; i < CAP_LEVELS.length; i += 1) {
+          if (value >= CAP_LEVELS[i].min) return CAP_LEVELS[i];
+        }
+        return { label: '', min: 0, className: '', duration: '' };
+      }
+
+      function nextCapLevelForPoints(points) {
+        var value = Number(points) || 0;
+        var ascending = CAP_LEVELS.slice().sort(function (a, b) {
+          return a.min - b.min;
+        });
+        for (var i = 0; i < ascending.length; i += 1) {
+          if (value < ascending[i].min) return ascending[i];
+        }
+        return null;
+      }
+
+      function autoCapNeededNote(points) {
+        var nextLevel = nextCapLevelForPoints(points + 1);
+        if (!nextLevel) return '';
+        if (nextLevel.label === 'Final') return 'Next occurrence Final';
+        if (nextLevel.label === 'Written') return 'Next full occurrence Written';
+        if (nextLevel.label === 'Termination') return 'Next occurrence Termination';
+        return '';
+      }
+
+      function latestPointDate(employeeName) {
+        var key = capKey(employeeName);
+        var latest = null;
+        rows.forEach(function (row) {
+          if (capKey(row.name) !== key && capKey(row.originalName) !== key) return;
+          if ((Number(row.points) || 0) <= 0) return;
+          if (!(row.date instanceof Date) || isNaN(row.date)) return;
+          if (!latest || row.date.getTime() > latest.getTime()) latest = row.date;
+        });
+        return latest ? dateKey(latest) : '';
+      }
+
+      function supervisorForEmployee(name) {
+        var info = employeeBucketInfo(name);
+        var label = info.teamLabel || '';
+        if (!label) return '';
+        return label
+          .replace(/'s\s+team.*$/i, '')
+          .replace(/\s+team.*$/i, '')
+          .trim();
+      }
+
+      function setBucketTeam(name, value) {
+        var bucket = getBucket(name);
+        var team = normalizeTeam(value);
+        bucket.name = name;
+        bucket.team = team;
+        bucket.waveDate = teamWaveDate(team);
+        saveBucketData();
+      }
+
       function moveBucketIfNeeded(previousName, nextName) {
         var previousKey = bucketKey(previousName);
         var nextKey = bucketKey(nextName);
-        if (!previousKey || !nextKey || previousKey === nextKey || !buckets[previousKey]) return;
-        if (!buckets[nextKey]) {
+        if (!previousKey || !nextKey || previousKey === nextKey) return;
+        if (buckets[previousKey] && !buckets[nextKey]) {
           buckets[nextKey] = buckets[previousKey];
           buckets[nextKey].name = nextName;
           delete buckets[previousKey];
           saveBucketData();
+        }
+        if (capSettings[previousKey] && !capSettings[nextKey]) {
+          capSettings[nextKey] = capSettings[previousKey];
+          capSettings[nextKey].name = nextName;
+          delete capSettings[previousKey];
+          saveCapData();
         }
       }
 
@@ -1588,6 +2228,19 @@
         today.setHours(0, 0, 0, 0);
         var recordDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         return recordDate < today ? 'past' : 'future';
+      }
+
+      function isRequestSource(row) {
+        var sourceText = norm([row && row.sourceFile, row && row.sourceSheet].filter(Boolean).join(' '));
+        return sourceText.indexOf('requested days off') !== -1 ||
+          sourceText.indexOf('time off request') !== -1 ||
+          sourceText.indexOf('future request') !== -1;
+      }
+
+      function defaultStatus(row) {
+        var dateStatus = classify(row && row.date);
+        if (isRequestSource(row)) return dateStatus === 'past' ? 'pastrequest' : 'future';
+        return dateStatus;
       }
 
       function isValidStatus(value) {
@@ -1645,6 +2298,14 @@
         return normalizeFlags(row.flags || row.followUp).indexOf(flag) !== -1;
       }
 
+      function rowHighlightClass(row, baseClass) {
+        var classes = [];
+        if (baseClass) classes.push(baseClass);
+        if (row && row.bucketApplied) classes.push('bucket-row');
+        if (hasFlag(row || {}, 'policyDropOffPending')) classes.push('dropoff-row');
+        return classes.length ? ' class="' + escapeHtml(classes.join(' ')) + '"' : '';
+      }
+
       function normalizeMonth(value) {
         if (value instanceof Date && !isNaN(value)) return dateKey(value).slice(0, 7);
         if (typeof value === 'number' && Number.isFinite(value)) {
@@ -1674,11 +2335,15 @@
 
       function resolveType(row) {
         if (isValidStatus(row.statusOverride)) return row.statusOverride;
-        return classify(row.date);
+        return defaultStatus(row);
       }
 
       function isOccurrence(type) {
         return type === 'past';
+      }
+
+      function countsAsOccurrence(row) {
+        return isOccurrence(row && row.type) && (Number(row.points) || 0) > 0;
       }
 
       function statusBadgeClass(type) {
@@ -1731,24 +2396,40 @@
         var flags = normalizeFlags(raw.flags || raw.flag || raw.followUp || raw.followUpStatus || raw.followUpCategory || raw.policyStatus);
         if (!flags.length) flags = normalizeFlags([raw.statusOverride, raw.type]);
         var followUpMonth = flags.indexOf('giveback30') !== -1 ? normalizeMonth(raw.followUpMonth || raw.flagMonth || raw.giveBackMonth) : '';
+        var sourceFile = toText(raw.sourceFile);
+        var sourceSheet = toText(raw.sourceSheet);
+        var code = toText(raw.code);
+        var reason = toText(raw.reason);
+        var team = normalizeTeam(raw.team || raw.teamName || raw.waveTeam) || inferTeam(raw.sourceFile, raw.sourceSheet);
+        var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(raw.waveDate);
+        var statusBasis = {
+          sourceFile: sourceFile,
+          sourceSheet: sourceSheet,
+          code: code,
+          reason: reason,
+          date: date
+        };
+        var automaticStatus = defaultStatus(statusBasis);
         var statusOverride = '';
         var savedStatusOverride = normalizeStatusValue(raw.statusOverride);
         var savedType = normalizeStatusValue(raw.type);
         if (savedStatusOverride) statusOverride = savedStatusOverride;
-        if (!statusOverride && savedType && savedType !== classify(date)) statusOverride = savedType;
+        if (!statusOverride && savedType && savedType !== automaticStatus && !(isRequestSource(statusBasis) && savedType === classify(date))) statusOverride = savedType;
 
         return {
           id: raw.id || createId(),
-          sourceFile: toText(raw.sourceFile),
-          sourceSheet: toText(raw.sourceSheet),
+          sourceFile: sourceFile,
+          sourceSheet: sourceSheet,
           name: currentName,
           originalName: originalName,
           displayName: currentName,
           editedEmployee: Boolean(raw.editedEmployee && currentName !== originalName),
+          team: team,
+          waveDate: waveDate,
           date: date,
           dateText: date ? formatDate(date) : toText(raw.dateText),
-          code: toText(raw.code),
-          reason: toText(raw.reason),
+          code: code,
+          reason: reason,
           startTime: toText(raw.startTime),
           endTime: toText(raw.endTime),
           points: currentPoints,
@@ -1759,7 +2440,7 @@
           followUp: flags[0] || '',
           followUpMonth: followUpMonth,
           bucketApplied: Boolean(raw.bucketApplied),
-          type: statusOverride || classify(date)
+          type: statusOverride || automaticStatus
         };
       }
 
@@ -1783,7 +2464,7 @@
             rawValues[field] = getMappedValue(sourceRow, columnMap, field);
           });
 
-          var hasAnyMappedValue = fields.some(function (field) {
+          var hasAnyMappedValue = ['name', 'date', 'code', 'reason', 'startTime', 'endTime', 'points', 'followUp', 'followUpMonth'].some(function (field) {
             return !isBlank(rawValues[field]);
           });
           if (!hasAnyMappedValue) continue;
@@ -1791,6 +2472,8 @@
           var parsedDate = parseDate(rawValues.date);
           var name = toText(rawValues.name);
           var originalPoints = parsePoints(rawValues.points);
+          var team = normalizeTeam(rawValues.team) || inferTeam(fileName, sheetName);
+          var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(rawValues.waveDate);
 
           records.push({
             id: createId(),
@@ -1800,6 +2483,8 @@
             originalName: name,
             displayName: name,
             editedEmployee: false,
+            team: team,
+            waveDate: waveDate,
             date: parsedDate,
             dateText: parsedDate ? formatDate(parsedDate) : toText(rawValues.date),
             code: toText(rawValues.code),
@@ -1814,7 +2499,13 @@
             followUp: normalizeFlags(rawValues.followUp)[0] || '',
             followUpMonth: normalizeMonth(rawValues.followUpMonth),
             bucketApplied: false,
-            type: classify(parsedDate)
+            type: defaultStatus({
+              sourceFile: fileName,
+              sourceSheet: sheetName,
+              code: rawValues.code,
+              reason: rawValues.reason,
+              date: parsedDate
+            })
           });
         }
 
@@ -1873,6 +2564,8 @@
             originalName: row.originalName,
             displayName: row.displayName,
             editedEmployee: row.editedEmployee,
+            team: normalizeTeam(row.team),
+            waveDate: normalizeWaveDate(row.waveDate),
             dateIso: row.date instanceof Date && !isNaN(row.date) ? row.date.toISOString() : '',
             dateText: row.dateText,
             code: row.code,
@@ -1910,6 +2603,141 @@
         if (!options || !options.skipCloudSync) queueCloudSync();
       }
 
+      function applyTeamConfig(source) {
+        var next = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+        Object.keys(source || {}).forEach(function (key) {
+          var label = toText(source[key] && source[key].label);
+          var waveDate = normalizeWaveDate(source[key] && source[key].waveDate);
+          if (!key || !label || !waveDate) return;
+          next[key] = {
+            label: label,
+            waveDate: waveDate
+          };
+        });
+        TEAM_CONFIG = next;
+      }
+
+      function saveTeamData(options) {
+        try {
+          localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(TEAM_CONFIG));
+        } catch (error) {
+          alert('Unable to save wave teams in this browser. The changes are still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function loadTeamData() {
+        var saved = localStorage.getItem(TEAM_STORAGE_KEY);
+        if (!saved) {
+          TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          applyTeamConfig(parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {});
+        } catch (error) {
+          TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+        }
+      }
+
+      function saveCapData(options) {
+        try {
+          localStorage.setItem(CAP_STORAGE_KEY, JSON.stringify(capSettings));
+        } catch (error) {
+          alert('Unable to save CAP settings in this browser. The changes are still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function loadCapData() {
+        var saved = localStorage.getItem(CAP_STORAGE_KEY);
+        if (!saved) {
+          capSettings = {};
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          capSettings = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+          Object.keys(capSettings).forEach(function (key) {
+            capSettings[key] = {
+              name: toText(capSettings[key].name),
+              issueDate: normalizeWaveDate(capSettings[key].issueDate),
+              neededNote: toText(capSettings[key].neededNote)
+            };
+          });
+        } catch (error) {
+          capSettings = {};
+        }
+      }
+
+      function showWaveTeamStatus(message) {
+        els.waveTeamStatus.textContent = message;
+        setTimeout(function () {
+          if (els.waveTeamStatus.textContent === message) els.waveTeamStatus.textContent = '';
+        }, 3000);
+      }
+
+      function resetWaveTeamForm() {
+        els.waveTeamKey.value = '';
+        els.waveTeamName.value = '';
+        els.waveTeamDate.value = '';
+        els.saveWaveTeamBtn.textContent = 'Save Team';
+      }
+
+      function renderWaveTeams() {
+        refreshTeamSelectOptions();
+        els.waveTeamsBody.innerHTML = teamValues().map(function (key) {
+          var team = TEAM_CONFIG[key];
+          return '<tr>' +
+            '<td>' + escapeHtml(team.label) + '</td>' +
+            '<td>' + escapeHtml(formatWaveDate(team.waveDate)) + '</td>' +
+            '<td><button class="small secondary" type="button" data-team-action="edit" data-team-key="' + escapeHtml(key) + '">Edit</button></td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      function saveWaveTeam(event) {
+        event.preventDefault();
+        var key = els.waveTeamKey.value || makeTeamKey(els.waveTeamName.value);
+        var label = toText(els.waveTeamName.value);
+        var waveDate = normalizeWaveDate(els.waveTeamDate.value);
+
+        if (!label) {
+          alert('Team name is required.');
+          els.waveTeamName.focus();
+          return;
+        }
+
+        if (!waveDate) {
+          alert('Wave date is required.');
+          els.waveTeamDate.focus();
+          return;
+        }
+
+        TEAM_CONFIG[key] = {
+          label: label,
+          waveDate: waveDate
+        };
+        saveTeamData();
+        resetWaveTeamForm();
+        render();
+        showWaveTeamStatus('Wave team saved.');
+      }
+
+      function editWaveTeam(key) {
+        var normalizedKey = normalizeTeam(key);
+        if (!normalizedKey || !TEAM_CONFIG[normalizedKey]) return;
+        els.waveTeamKey.value = normalizedKey;
+        els.waveTeamName.value = TEAM_CONFIG[normalizedKey].label;
+        els.waveTeamDate.value = TEAM_CONFIG[normalizedKey].waveDate;
+        els.saveWaveTeamBtn.textContent = 'Update Team';
+        els.waveTeamName.focus();
+      }
+
       function loadBucketData() {
         var saved = localStorage.getItem(BUCKET_STORAGE_KEY);
         if (!saved) {
@@ -1921,9 +2749,12 @@
           var parsed = JSON.parse(saved);
           buckets = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
           Object.keys(buckets).forEach(function (key) {
+            var team = normalizeTeam(buckets[key].team);
             buckets[key] = {
               name: toText(buckets[key].name),
-              days: Number(buckets[key].days) || 0
+              days: Number(buckets[key].days) || 0,
+              team: team,
+              waveDate: normalizeWaveDate(buckets[key].waveDate) || teamWaveDate(team)
             };
           });
         } catch (error) {
@@ -2129,10 +2960,10 @@
           var parsed = JSON.parse(saved);
           if (!parsed || typeof parsed !== 'object') return;
           cloudConfig.clientId = toText(parsed.clientId);
-          cloudConfig.spreadsheetId = toText(parsed.spreadsheetId);
+          cloudConfig.spreadsheetId = toText(parsed.spreadsheetId) || TEAM_REFERENCE_SPREADSHEET_ID;
           cloudConfig.autoSync = Boolean(parsed.autoSync);
         } catch (error) {
-          cloudConfig = { clientId: '', spreadsheetId: '', autoSync: false };
+          cloudConfig = { clientId: '', spreadsheetId: TEAM_REFERENCE_SPREADSHEET_ID, autoSync: false };
         }
       }
 
@@ -2275,11 +3106,14 @@
       function cloudRecordRows() {
         var headers = [
           'id', 'sourceFile', 'sourceSheet', 'name', 'originalName', 'displayName', 'editedEmployee',
-          'dateIso', 'dateText', 'code', 'reason', 'startTime', 'endTime', 'points', 'originalPoints',
-          'editedPoints', 'statusOverride', 'flags', 'followUpMonth', 'bucketApplied', 'type'
+          'team', 'waveDate', 'dateIso', 'dateText', 'code', 'reason', 'startTime', 'endTime', 'points',
+          'originalPoints', 'editedPoints', 'statusOverride', 'flags', 'followUpMonth', 'bucketApplied', 'type'
         ];
         var values = [headers];
         rows.forEach(function (row) {
+          var bucketInfo = employeeBucketInfo(row.name);
+          var rowTeam = normalizeTeam(row.team) || bucketInfo.team;
+          var rowWaveDate = rowTeam ? teamWaveDate(rowTeam) : normalizeWaveDate(row.waveDate) || bucketInfo.waveDate;
           values.push([
             row.id,
             row.sourceFile,
@@ -2288,6 +3122,8 @@
             row.originalName,
             row.displayName,
             row.editedEmployee ? 'true' : 'false',
+            teamLabel(rowTeam) || rowTeam,
+            rowWaveDate,
             row.date instanceof Date && !isNaN(row.date) ? row.date.toISOString() : '',
             row.dateText || '',
             row.code,
@@ -2308,11 +3144,42 @@
       }
 
       function cloudBucketRows() {
-        var headers = ['key', 'name', 'days'];
+        var headers = ['rowType', 'key', 'name', 'team', 'waveDate', 'ptoDays', 'atoDays', 'totalBucketDays', 'bucketOccurrences', 'remainingDays', 'legacyApprovedDays', 'capIssueDate', 'capNeededNote'];
         var values = [headers];
-        Object.keys(buckets).forEach(function (key) {
-          if (!buckets[key]) return;
-          values.push([key, buckets[key].name || '', String(Number(buckets[key].days) || 0)]);
+        bucketEmployeeRows(rows).forEach(function (item) {
+          var cap = getCapSetting(item.name);
+          values.push([
+            'employee',
+            bucketKey(item.name),
+            item.name,
+            item.teamLabel || item.team,
+            item.waveDate,
+            String(item.ptoDays),
+            String(item.atoDays),
+            String(item.days),
+            String(item.assigned),
+            String(item.remaining),
+            String(item.legacyDays),
+            cap.issueDate || '',
+            cap.neededNote || ''
+          ]);
+        });
+        teamValues().forEach(function (key) {
+          values.push([
+            'team',
+            key,
+            TEAM_CONFIG[key].label,
+            key,
+            TEAM_CONFIG[key].waveDate,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+          ]);
         });
         return values;
       }
@@ -2337,6 +3204,8 @@
             originalName: cell('originalName'),
             displayName: cell('displayName'),
             editedEmployee: norm(cell('editedEmployee')) === 'true',
+            team: cell('team'),
+            waveDate: cell('waveDate'),
             dateIso: cell('dateIso'),
             dateText: cell('dateText'),
             code: cell('code'),
@@ -2357,20 +3226,44 @@
 
       function bucketsFromCloud(values) {
         var next = {};
-        if (!Array.isArray(values) || values.length < 2) return next;
+        var teams = {};
+        var caps = {};
+        if (!Array.isArray(values) || values.length < 2) return { buckets: next, teams: teams, caps: caps };
         var headers = values[0].map(function (value) { return toText(value); });
         var index = {};
         headers.forEach(function (name, idx) { index[name] = idx; });
         values.slice(1).forEach(function (row) {
           if (!Array.isArray(row) || !row.length) return;
-          var key = index.key == null ? '' : toText(row[index.key]);
+          function cell(name) {
+            return index[name] == null ? '' : row[index[name]];
+          }
+          var name = toText(cell('name'));
+          var key = index.key == null ? '' : toText(cell('key'));
+          if (!key && name) key = bucketKey(name);
           if (!key) return;
+          var rowType = norm(cell('rowType'));
+          var waveDate = normalizeWaveDate(cell('waveDate'));
+          if (rowType === 'team') {
+            if (name && waveDate) teams[key] = { label: name, waveDate: waveDate };
+            return;
+          }
           next[key] = {
-            name: index.name == null ? '' : toText(row[index.name]),
-            days: index.days == null ? 0 : Number(row[index.days]) || 0
+            name: name,
+            days: index.days == null ? Number(cell('legacyApprovedDays')) || Number(cell('totalBucketDays')) || 0 : Number(cell('days')) || 0,
+            team: toText(cell('team')),
+            waveDate: waveDate
           };
+          var capIssueDate = normalizeWaveDate(cell('capIssueDate'));
+          var capNeededNote = toText(cell('capNeededNote'));
+          if (capIssueDate || capNeededNote) {
+            caps[key] = {
+              name: name,
+              issueDate: capIssueDate,
+              neededNote: capNeededNote
+            };
+          }
         });
-        return next;
+        return { buckets: next, teams: teams, caps: caps };
       }
 
       async function cloudCreateSpreadsheet() {
@@ -2424,10 +3317,22 @@
         var bucketsValues = ranges[1] && ranges[1].values ? ranges[1].values : [];
         suppressCloudSync = true;
         try {
+          var cloudBuckets = bucketsFromCloud(bucketsValues);
+          if (Object.keys(cloudBuckets.teams).length) {
+            applyTeamConfig(cloudBuckets.teams);
+            saveTeamData({ skipCloudSync: true });
+          }
           rows = rowsFromCloud(recordsValues);
-          buckets = bucketsFromCloud(bucketsValues);
+          buckets = cloudBuckets.buckets;
+          capSettings = cloudBuckets.caps || {};
+          Object.keys(buckets).forEach(function (key) {
+            var team = normalizeTeam(buckets[key].team);
+            buckets[key].team = team;
+            buckets[key].waveDate = team ? teamWaveDate(team) : normalizeWaveDate(buckets[key].waveDate);
+          });
           saveData({ skipCloudSync: true });
           saveBucketData({ skipCloudSync: true });
+          saveCapData({ skipCloudSync: true });
         } finally {
           suppressCloudSync = false;
         }
@@ -2439,8 +3344,10 @@
         if (!confirm('Clear all saved attendance records from this browser?')) return;
         rows = [];
         buckets = {};
+        capSettings = {};
         saveData();
         saveBucketData();
+        saveCapData();
         render();
       }
 
@@ -2553,6 +3460,7 @@
         els.manualForm.reset();
         els.manualPoints.value = '0';
         els.manualStatusSelect.value = 'past';
+        els.manualTeam.value = '';
         setSelectedFlags(els.manualFlagInputs, []);
         els.manualFlagMonth.value = '';
         updateManualFlagControls();
@@ -2567,6 +3475,8 @@
         var statusOverride = normalizeStatusValue(els.manualStatusSelect.value) || classify(date);
         var flags = selectedFlags(els.manualFlagInputs);
         var followUpMonth = flags.indexOf('giveback30') !== -1 ? normalizeMonth(els.manualFlagMonth.value) : '';
+        var team = normalizeTeam(els.manualTeam.value);
+        var waveDate = teamWaveDate(team);
 
         if (!name) {
           alert('Employee name is required.');
@@ -2599,6 +3509,8 @@
           originalName: name,
           displayName: name,
           editedEmployee: false,
+          team: team,
+          waveDate: waveDate,
           date: date,
           dateText: formatDate(date),
           code: toText(els.manualCode.value),
@@ -2727,7 +3639,7 @@
 
       function renderStats() {
         var total = rows.length;
-        var past = rows.filter(function (row) { return isOccurrence(row.type); }).length;
+        var past = rows.filter(countsAsOccurrence).length;
         var future = rows.filter(function (row) { return row.type === 'future'; }).length;
         var points = rows.reduce(function (sum, row) {
           return sum + (Number(row.points) || 0);
@@ -2776,7 +3688,7 @@
           var resetStatus = row.statusOverride ? '<button class="small secondary" type="button" data-action="reset-status" data-id="' + escapeHtml(row.id) + '">Reset Status</button>' : '';
           var actionMenuId = escapeHtml(row.id);
 
-          return '<tr' + (row.bucketApplied ? ' class="bucket-row"' : '') + '>' +
+          return '<tr' + rowHighlightClass(row) + '>' +
             '<td>' + nameButton + '</td>' +
             '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
             '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
@@ -2840,7 +3752,7 @@
           var item = grouped.get(name);
           item.total += 1;
           item.points += Number(row.points) || 0;
-          if (isOccurrence(row.type)) item.past += 1;
+          if (countsAsOccurrence(row)) item.past += 1;
           if (row.type === 'pastrequest') item.pastRequest += 1;
           if (row.type === 'future') item.future += 1;
         });
@@ -2873,25 +3785,109 @@
         });
       }
 
-      function bucketEmployeeRows() {
-        var names = new Set();
-        filteredRows().forEach(function (row) {
-          if (row.name) names.add(row.name);
+      function capEmployeeRows() {
+        var rowSource = filteredRows();
+        var namesByKey = {};
+        rowSource.forEach(function (row) {
+          rememberEmployeeName(namesByKey, row.name, preferredEmployeeDisplayName(row));
         });
         Object.keys(buckets).forEach(function (key) {
-          if (buckets[key] && buckets[key].name) names.add(buckets[key].name);
+          if (buckets[key] && buckets[key].name) rememberEmployeeName(namesByKey, buckets[key].name);
+        });
+        Object.keys(capSettings).forEach(function (key) {
+          if (capSettings[key] && capSettings[key].name) rememberEmployeeName(namesByKey, capSettings[key].name);
         });
 
-        return Array.from(names).sort(function (a, b) {
+        return Object.keys(namesByKey).map(function (key) {
+          var name = namesByKey[key];
+          var relatedRows = rowSource.filter(function (row) {
+            return capKey(row.name) === key || capKey(row.originalName) === key;
+          });
+          var totalPoints = relatedRows.reduce(function (sum, row) {
+            return sum + (Number(row.points) || 0);
+          }, 0);
+          var level = capLevelForPoints(totalPoints);
+          var setting = getCapSetting(name);
+          var issueDate = setting.issueDate || (level.label ? latestPointDate(name) : '');
+          var neededNote = setting.neededNote || autoCapNeededNote(totalPoints);
+          return {
+            key: key,
+            name: name,
+            supervisor: supervisorForEmployee(name),
+            totalPoints: totalPoints,
+            level: level,
+            issueDate: issueDate,
+            neededNote: neededNote
+          };
+        }).sort(function (a, b) {
+          var pointSort = b.totalPoints - a.totalPoints;
+          return pointSort || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+        });
+      }
+
+      function renderCap() {
+        var capRows = capEmployeeRows();
+        els.capBody.innerHTML = capRows.map(function (item) {
+          var safeName = escapeHtml(item.name);
+          var pointClass = item.level.className ? ' class="cap-scale-cell ' + escapeHtml(item.level.className) + '"' : '';
+          var issueValue = item.issueDate ? escapeHtml(item.issueDate) : '';
+          var noteValue = escapeHtml(item.neededNote);
+          return '<tr>' +
+            '<td><button class="name-button" type="button" data-cap-action="view-employee" data-name="' + safeName + '">' + safeName + '</button></td>' +
+            '<td>' + escapeHtml(item.supervisor) + '</td>' +
+            '<td' + pointClass + '>' + escapeHtml(formatPoints(item.totalPoints)) + '</td>' +
+            '<td' + pointClass + '>' + escapeHtml(item.level.label) + '</td>' +
+            '<td><input class="compact-input" type="date" value="' + issueValue + '" data-cap-field="issueDate" data-name="' + safeName + '"></td>' +
+            '<td><input class="cap-note-input" type="text" value="' + noteValue + '" data-cap-field="neededNote" data-name="' + safeName + '"></td>' +
+          '</tr>';
+        }).join('');
+        els.capEmpty.classList.toggle('hidden', capRows.length !== 0);
+      }
+
+      function saveCapField(employeeName, field, value) {
+        var setting = getCapSetting(employeeName);
+        setting.name = employeeName;
+        if (field === 'issueDate') {
+          setting.issueDate = normalizeWaveDate(value);
+        }
+        if (field === 'neededNote') {
+          setting.neededNote = toText(value);
+        }
+        saveCapData();
+        renderCap();
+      }
+
+      function bucketEmployeeRows(sourceRows) {
+        var rowSource = Array.isArray(sourceRows) ? sourceRows : filteredRows();
+        var namesByKey = {};
+        rowSource.forEach(function (row) {
+          rememberEmployeeName(namesByKey, row.name, preferredEmployeeDisplayName(row));
+        });
+        Object.keys(buckets).forEach(function (key) {
+          if (buckets[key] && buckets[key].name) rememberEmployeeName(namesByKey, buckets[key].name);
+        });
+
+        return Object.keys(namesByKey).map(function (key) {
+          return namesByKey[key];
+        }).sort(function (a, b) {
           return a.localeCompare(b, undefined, { sensitivity: 'base' });
         }).map(function (name) {
+          var key = bucketKey(name);
           var assigned = rows.filter(function (row) {
-            return row.name === name && row.bucketApplied;
+            return (bucketKey(row.name) === key || bucketKey(row.originalName) === key) && row.bucketApplied;
           }).length;
-          var days = bucketDays(name);
+          var info = employeeBucketInfo(name);
+          var days = info.totalDays;
           return {
             name: name,
+            team: info.team,
+            teamLabel: info.teamLabel,
+            waveDate: info.waveDate,
+            waveDateLabel: info.waveDateLabel,
+            ptoDays: info.ptoDays,
+            atoDays: info.atoDays,
             days: days,
+            legacyDays: info.legacyDays,
             assigned: assigned,
             remaining: days - assigned
           };
@@ -2905,10 +3901,14 @@
           var remainingClass = item.remaining < 0 ? 'text-danger' : 'muted';
           return '<tr>' +
             '<td><button class="name-button" type="button" data-bucket-action="view-employee" data-name="' + safeName + '">' + safeName + '</button></td>' +
-            '<td><input class="compact-input" type="number" min="0" step="0.25" value="' + escapeHtml(item.days) + '" data-bucket-days="' + safeName + '"></td>' +
+            '<td><select class="compact-select" data-bucket-team="' + safeName + '">' + teamSelectOptions(item.team) + '</select></td>' +
+            '<td>' + escapeHtml(item.waveDateLabel || 'Unassigned') + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.ptoDays)) + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.atoDays)) + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.days)) + '</td>' +
             '<td>' + item.assigned.toLocaleString() + '</td>' +
-            '<td><span class="' + remainingClass + '">' + escapeHtml(formatPoints(item.remaining)) + '</span></td>' +
-            '<td><button class="small primary" type="button" data-bucket-action="manage" data-name="' + safeName + '">Manage Occurrences</button></td>' +
+            '<td><span class="' + remainingClass + '">' + escapeHtml(formatBucketDays(item.remaining)) + '</span></td>' +
+            '<td><button class="small primary" type="button" data-bucket-action="manage" data-name="' + safeName + '">Manage</button></td>' +
           '</tr>';
         }).join('');
         els.bucketEmpty.classList.toggle('hidden', employees.length !== 0);
@@ -2922,8 +3922,11 @@
           row.followUp = row.flags[0] || '';
           row.followUpMonth = row.flags.indexOf('giveback30') !== -1 ? normalizeMonth(row.followUpMonth) : '';
           row.bucketApplied = Boolean(row.bucketApplied);
+          row.team = normalizeTeam(row.team) || inferTeam(row.sourceFile, row.sourceSheet);
+          row.waveDate = row.team ? teamWaveDate(row.team) : normalizeWaveDate(row.waveDate);
           row.statusOverride = normalizeStatusValue(row.statusOverride);
-          if (!row.statusOverride && currentType && currentType !== classify(row.date)) row.statusOverride = currentType;
+          var automaticStatus = defaultStatus(row);
+          if (!row.statusOverride && currentType && currentType !== automaticStatus && !(isRequestSource(row) && currentType === classify(row.date))) row.statusOverride = currentType;
           row.type = resolveType(row);
           row.dateText = row.date ? formatDate(row.date) : row.dateText;
           row.displayName = row.name;
@@ -2933,8 +3936,10 @@
         populateFilters();
         var visibleCount = filteredRows().length;
         renderStats();
+        renderWaveTeams();
         renderRecords();
         renderSummary();
+        renderCap();
         renderBucket();
         renderStatus(visibleCount);
       }
@@ -2943,15 +3948,19 @@
         activeView = view;
         var showRecords = activeView === 'records';
         var showSummary = activeView === 'summary';
+        var showCap = activeView === 'cap';
         var showBucket = activeView === 'bucket';
         els.recordsView.classList.toggle('hidden', !showRecords);
         els.summaryView.classList.toggle('hidden', !showSummary);
+        els.capView.classList.toggle('hidden', !showCap);
         els.bucketView.classList.toggle('hidden', !showBucket);
         els.recordsTab.classList.toggle('active', showRecords);
         els.summaryTab.classList.toggle('active', showSummary);
+        els.capTab.classList.toggle('active', showCap);
         els.bucketTab.classList.toggle('active', showBucket);
         els.recordsTab.setAttribute('aria-selected', String(showRecords));
         els.summaryTab.setAttribute('aria-selected', String(showSummary));
+        els.capTab.setAttribute('aria-selected', String(showCap));
         els.bucketTab.setAttribute('aria-selected', String(showBucket));
       }
 
@@ -3010,8 +4019,9 @@
       }
 
       function employeeOccurrences(employeeName) {
+        var key = bucketKey(employeeName);
         return rows.filter(function (row) {
-          return row.name === employeeName;
+          return bucketKey(row.name) === key || bucketKey(row.originalName) === key;
         }).sort(function (a, b) {
           var aTime = a.date ? a.date.getTime() : 0;
           var bTime = b.date ? b.date.getTime() : 0;
@@ -3025,12 +4035,13 @@
         var totalPoints = occurrences.reduce(function (sum, row) {
           return sum + (Number(row.points) || 0);
         }, 0);
-        var totalBucketDays = bucketDays(employeeName);
+        var bucketInfo = employeeBucketInfo(employeeName);
+        var totalBucketDays = bucketInfo.totalDays;
         var bucketDaysUsed = occurrences.filter(function (row) {
           return row.bucketApplied;
         }).length;
         var pastCount = occurrences.filter(function (row) {
-          return isOccurrence(row.type);
+          return countsAsOccurrence(row);
         }).length;
         var pastRequestCount = occurrences.filter(function (row) {
           return row.type === 'pastrequest';
@@ -3046,12 +4057,12 @@
           pastRequestCount.toLocaleString() + ' past requests | ' +
           futureCount.toLocaleString() + ' future | ' +
           formatPoints(totalPoints) + ' total points | ' +
-          formatPoints(totalBucketDays) + ' total bucket days | ' +
-          formatPoints(bucketDaysUsed) + ' bucket days used';
+          formatBucketDays(totalBucketDays) + ' total bucket days | ' +
+          formatBucketDays(bucketDaysUsed) + ' bucket days used';
         els.employeeOccurrencesBody.innerHTML = occurrences.map(function (row) {
           var flagText = followUpBadge(row.flags, row.followUpMonth) || '<span class="muted">None</span>';
           if (row.bucketApplied) flagText += ' <span class="badge bucket">Bucket</span>';
-          return '<tr class="occurrence-row' + (row.bucketApplied ? ' bucket-row' : '') + '" data-occurrence-id="' + escapeHtml(row.id) + '">' +
+          return '<tr' + rowHighlightClass(row, 'occurrence-row') + ' data-occurrence-id="' + escapeHtml(row.id) + '">' +
             '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
             '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
             '<td>' + flagText + '</td>' +
@@ -3088,15 +4099,19 @@
 
       function renderEmployeeBucket(employeeName) {
         var occurrences = employeeOccurrences(employeeName);
-        var approved = bucketDays(employeeName);
+        var info = employeeBucketInfo(employeeName);
+        var approved = info.totalDays;
         var used = occurrences.filter(function (row) {
           return row.bucketApplied;
         }).length;
-        els.employeeBucketDays.value = String(approved);
+        els.employeeBucketTeam.value = info.team || '';
+        els.employeeBucketWave.textContent = info.waveDateLabel || 'Unassigned';
+        els.employeeBucketDays.value = formatBucketDays(approved);
+        els.employeeBucketAccrual.textContent = formatBucketDays(info.ptoDays) + ' PTO / ' + formatBucketDays(info.atoDays) + ' ATO';
         els.employeeBucketSummary.textContent = used.toLocaleString() + ' bucket occurrences | ' +
-          formatPoints(approved - used) + ' remaining';
+          formatBucketDays(approved - used) + ' remaining';
         els.employeeBucketOccurrencesBody.innerHTML = occurrences.map(function (row) {
-          return '<tr' + (row.bucketApplied ? ' class="bucket-row"' : '') + '>' +
+          return '<tr' + rowHighlightClass(row) + '>' +
             '<td><label class="check-option"><input type="checkbox" data-employee-bucket-row-id="' + escapeHtml(row.id) + '"' + (row.bucketApplied ? ' checked' : '') + '> <span>Use</span></label></td>' +
             '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
             '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
@@ -3111,14 +4126,13 @@
       function saveEmployeeBucketUses() {
         var employeeName = els.employeeModalName.value;
         if (!employeeName) return;
-        setBucketDays(employeeName, els.employeeBucketDays.value);
 
         var selected = new Set(Array.from(els.employeeBucketOccurrencesBody.querySelectorAll('input[data-employee-bucket-row-id]:checked')).map(function (input) {
           return input.getAttribute('data-employee-bucket-row-id');
         }));
 
         rows.forEach(function (row) {
-          if (row.name === employeeName) row.bucketApplied = selected.has(row.id);
+          if (sameEmployeeName(row.name, employeeName) || sameEmployeeName(row.originalName, employeeName)) row.bucketApplied = selected.has(row.id);
         });
 
         saveData();
@@ -3129,25 +4143,30 @@
 
       function openBucketModal(employeeName) {
         if (!employeeName) return;
+        var key = bucketKey(employeeName);
         var occurrences = rows.filter(function (row) {
-          return row.name === employeeName;
+          return bucketKey(row.name) === key || bucketKey(row.originalName) === key;
         }).sort(function (a, b) {
           var aTime = a.date ? a.date.getTime() : 0;
           var bTime = b.date ? b.date.getTime() : 0;
           return bTime - aTime;
         });
-        var approved = bucketDays(employeeName);
+        var info = employeeBucketInfo(employeeName);
+        var approved = info.totalDays;
         var used = occurrences.filter(function (row) {
           return row.bucketApplied;
         }).length;
 
         els.bucketEmployeeName.value = employeeName;
         els.bucketModalTitle.textContent = employeeName + ' Bucket';
-        els.bucketModalSummary.textContent = formatPoints(approved) + ' approved days | ' +
+        els.bucketModalSummary.textContent = (info.waveDateLabel || 'No wave date') + ' wave date | ' +
+          formatBucketDays(info.ptoDays) + ' PTO | ' +
+          formatBucketDays(info.atoDays) + ' ATO | ' +
+          formatBucketDays(approved) + ' total bucket days | ' +
           used.toLocaleString() + ' bucket occurrences | ' +
-          formatPoints(approved - used) + ' remaining';
+          formatBucketDays(approved - used) + ' remaining';
         els.bucketOccurrencesBody.innerHTML = occurrences.map(function (row) {
-          return '<tr' + (row.bucketApplied ? ' class="bucket-row"' : '') + '>' +
+          return '<tr' + rowHighlightClass(row) + '>' +
             '<td><label class="check-option"><input type="checkbox" data-bucket-row-id="' + escapeHtml(row.id) + '"' + (row.bucketApplied ? ' checked' : '') + '> <span>Use</span></label></td>' +
             '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
             '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
@@ -3179,7 +4198,7 @@
         }));
 
         rows.forEach(function (row) {
-          if (row.name === employeeName) {
+          if (sameEmployeeName(row.name, employeeName) || sameEmployeeName(row.originalName, employeeName)) {
             row.bucketApplied = selected.has(row.id);
           }
         });
@@ -3480,6 +4499,47 @@
         render();
       }
 
+      function deleteAgentRecords(employeeName) {
+        var targetKey = bucketKey(employeeName);
+        if (!targetKey) return;
+
+        var keysToDelete = new Set([targetKey]);
+        var recordsToDelete = rows.filter(function (row) {
+          var rowKeys = [bucketKey(row.name), bucketKey(row.originalName)].filter(Boolean);
+          var matches = rowKeys.indexOf(targetKey) !== -1;
+          if (matches) {
+            rowKeys.forEach(function (key) {
+              keysToDelete.add(key);
+            });
+          }
+          return matches;
+        });
+
+        if (!recordsToDelete.length && !buckets[targetKey]) {
+          alert('No records found for ' + employeeName + '.');
+          return;
+        }
+
+        var message = 'Delete all records for ' + employeeName + '?\n\n' +
+          recordsToDelete.length.toLocaleString() + ' attendance record' + (recordsToDelete.length === 1 ? '' : 's') + ' will be removed. ' +
+          'This also removes the agent bucket entry and cannot be undone.';
+        if (!confirm(message)) return;
+
+        rows = rows.filter(function (row) {
+          return !keysToDelete.has(bucketKey(row.name)) && !keysToDelete.has(bucketKey(row.originalName));
+        });
+        keysToDelete.forEach(function (key) {
+          delete buckets[key];
+          delete capSettings[key];
+        });
+
+        saveData();
+        saveBucketData();
+        saveCapData();
+        closeEmployeeModal();
+        render();
+      }
+
       function exportExcel() {
         if (!window.XLSX) {
           alert('The XLSX library did not load. Check your internet connection and try again.');
@@ -3492,9 +4552,12 @@
         }
 
         var data = rows.map(function (row) {
+          var bucketInfo = employeeBucketInfo(row.name);
           return {
             'Employee Name': row.name,
             'Original Excel Name': row.originalName,
+            'Wave Team': bucketInfo.teamLabel || teamLabel(row.team),
+            'Wave Date': bucketInfo.waveDate,
             'Date': row.dateText || formatDate(row.date),
             'Code': row.code,
             'Reason': row.reason,
@@ -3508,7 +4571,9 @@
             'Flag': followUpLabel(row.flags, row.followUpMonth),
             'Flag Month': formatMonthLabel(row.followUpMonth),
             'Bucket Applied?': row.bucketApplied ? 'Yes' : 'No',
-            'Approved Bucket Days': bucketDays(row.name),
+            'PTO Bucket Days': bucketInfo.ptoDays,
+            'ATO Bucket Days': bucketInfo.atoDays,
+            'Total Bucket Days': bucketInfo.totalDays,
             'Source File': row.sourceFile,
             'Source Sheet': row.sourceSheet
           };
@@ -3542,6 +4607,8 @@
             'Start Time': '8:00 AM',
             'End Time': '5:00 PM',
             'Points': 1,
+            'Wave Team': "Alicia's Team",
+            'Wave Date': '2025-10-01',
             'Flag': '30 Day Give Back',
             'Flag Month': formatMonthLabel(dateKey(past))
           },
@@ -3553,6 +4620,8 @@
             'Start Time': '9:00 AM',
             'End Time': '1:00 PM',
             'Points': 0,
+            'Wave Team': "Taylor's Team",
+            'Wave Date': '2026-05-01',
             'Flag': '',
             'Flag Month': ''
           }
@@ -3600,11 +4669,19 @@
       els.cloudCreateSheetBtn.addEventListener('click', handleCloudCreateSheet);
       els.cloudPushBtn.addEventListener('click', handleCloudPush);
       els.cloudPullBtn.addEventListener('click', handleCloudPull);
+      els.waveTeamForm.addEventListener('submit', saveWaveTeam);
+      els.newWaveTeamBtn.addEventListener('click', resetWaveTeamForm);
+      els.waveTeamsBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-team-action]');
+        if (!button) return;
+        if (button.getAttribute('data-team-action') === 'edit') editWaveTeam(button.getAttribute('data-team-key'));
+      });
       els.manualForm.addEventListener('submit', addManualRecord);
       els.manualForm.addEventListener('reset', function () {
         setTimeout(function () {
           els.manualPoints.value = '0';
           els.manualStatusSelect.value = 'past';
+          els.manualTeam.value = '';
           setSelectedFlags(els.manualFlagInputs, []);
           els.manualFlagMonth.value = '';
           updateManualFlagControls();
@@ -3616,6 +4693,9 @@
         if (event.target === els.editModal) closeEditModal();
       });
       els.closeEmployeeModalBtn.addEventListener('click', closeEmployeeModal);
+      els.deleteAgentBtn.addEventListener('click', function () {
+        deleteAgentRecords(els.employeeModalName.value);
+      });
       els.employeeModal.addEventListener('click', function (event) {
         if (event.target === els.employeeModal) closeEmployeeModal();
       });
@@ -3625,11 +4705,12 @@
       els.employeeBucketTab.addEventListener('click', function () {
         setEmployeeModalView('bucket');
       });
-      els.employeeBucketDays.addEventListener('change', function () {
+      els.employeeBucketTeam.addEventListener('change', function () {
         var employeeName = els.employeeModalName.value;
         if (!employeeName) return;
-        setBucketDays(employeeName, els.employeeBucketDays.value);
+        setBucketTeam(employeeName, els.employeeBucketTeam.value);
         renderEmployeeBucket(employeeName);
+        renderBucket();
       });
       els.saveEmployeeBucketBtn.addEventListener('click', saveEmployeeBucketUses);
       els.occurrenceForm.addEventListener('submit', saveOccurrenceEdit);
@@ -3699,6 +4780,16 @@
         if (!button) return;
         handleSummaryAction(button);
       });
+      els.capBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-cap-action]');
+        if (!button) return;
+        if (button.getAttribute('data-cap-action') === 'view-employee') openEmployeeModalByName(button.getAttribute('data-name'));
+      });
+      els.capBody.addEventListener('change', function (event) {
+        var input = event.target.closest('[data-cap-field]');
+        if (!input) return;
+        saveCapField(input.getAttribute('data-name'), input.getAttribute('data-cap-field'), input.value);
+      });
       els.bucketBody.addEventListener('click', function (event) {
         var button = event.target.closest('button[data-bucket-action]');
         if (!button) return;
@@ -3710,15 +4801,10 @@
           setEmployeeModalView('bucket');
         }
       });
-      els.bucketBody.addEventListener('input', function (event) {
-        var input = event.target.closest('input[data-bucket-days]');
-        if (!input) return;
-        setBucketDays(input.getAttribute('data-bucket-days'), input.value);
-      });
       els.bucketBody.addEventListener('change', function (event) {
-        var input = event.target.closest('input[data-bucket-days]');
-        if (!input) return;
-        setBucketDays(input.getAttribute('data-bucket-days'), input.value);
+        var select = event.target.closest('select[data-bucket-team]');
+        if (!select) return;
+        setBucketTeam(select.getAttribute('data-bucket-team'), select.value);
         renderBucket();
       });
       els.bucketOccurrencesBody.addEventListener('change', function (event) {
@@ -3739,6 +4825,8 @@
         openOccurrenceModal(row.getAttribute('data-occurrence-id'));
       });
 
+      loadTeamData();
+      loadCapData();
       loadSavedData();
       loadBucketData();
       loadCloudConfig();
