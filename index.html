@@ -4,13 +4,812 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Attendance Tracker</title>
-  <meta name="theme-color" content="#0f1318">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      --blue: #4a90d9;
+      --yellow: #f5c84b;
+      --bg: #0f1318;
+      --card: #171d24;
+      --text: #e7edf4;
+      --muted: #96a3b3;
+      --danger: #f87171;
+      --ok: #34d399;
+      --border: #2a3441;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.36);
+      --field: #111820;
+      --field-border: #334052;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Plus Jakarta Sans", "Segoe UI Variable", "Segoe UI", Aptos, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #141a21, #12385a);
+      border-bottom: 1px solid var(--border);
+      color: #fff;
+      padding: 30px 20px;
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-family: "Sora", "Plus Jakarta Sans", "Segoe UI Variable", "Segoe UI", sans-serif;
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(231, 237, 244, 0.78);
+      max-width: 760px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      max-width: 560px;
+    }
+
+    .app {
+      max-width: 1440px;
+      margin: 24px auto 42px;
+      padding: 0 20px;
+    }
+
+    .panel,
+    .stat-card,
+    table {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      color: var(--text);
+      font-family: "Sora", "Plus Jakarta Sans", "Segoe UI Variable", "Segoe UI", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: linear-gradient(180deg, #1a222c, #151b22);
+      padding: 16px;
+      min-height: 98px;
+    }
+
+    .stat-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 10px;
+      color: var(--yellow);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .filters,
+    .team-form,
+    .manual-form {
+      display: grid;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .filters {
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr auto;
+    }
+
+    .manual-form {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .team-form {
+      grid-template-columns: 2fr 1fr auto auto;
+      margin-bottom: 12px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .cloud-grid {
+      align-items: end;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 2fr 2fr auto auto auto auto auto;
+    }
+
+    .cloud-status {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+
+    .cloud-options {
+      margin-top: 8px;
+    }
+
+    .cloud-setup {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 12px;
+    }
+
+    .cloud-readonly {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cloud-readonly input {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      margin-bottom: 6px;
+    }
+
+    .flag-field {
+      border: 1px solid var(--field-border);
+      border-radius: 10px;
+      margin: 0;
+      min-height: 40px;
+      padding: 8px 10px 10px;
+    }
+
+    .flag-field legend {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      padding: 0 4px;
+    }
+
+    .flag-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+    }
+
+    .check-option {
+      align-items: center;
+      color: var(--text);
+      display: inline-flex;
+      font-size: 13px;
+      font-weight: 650;
+      gap: 7px;
+      margin: 0;
+    }
+
+    .check-option input {
+      accent-color: var(--blue);
+      margin: 0;
+    }
+
+    .compact-input {
+      max-width: 120px;
+    }
+
+    .compact-select {
+      min-width: 0;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    input[type="date"],
+    input[type="file"],
+    input[type="month"],
+    input[type="number"],
+    input[type="search"],
+    input[type="text"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--field-border);
+      border-radius: 10px;
+      background: var(--field);
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 10px;
+    }
+
+    textarea {
+      min-height: 40px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.18);
+      outline: 0;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6f7c8d;
+    }
+
+    input[type="file"] {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      max-width: 280px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .compact-tabs {
+      margin-top: 14px;
+    }
+
+    button,
+    .file-button {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      padding: 9px 12px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+      white-space: nowrap;
+    }
+
+    button:hover,
+    .file-button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      transform: none;
+    }
+
+    .primary {
+      background: var(--blue);
+      border-color: #6aa7e3;
+      color: #07111d;
+    }
+
+    .secondary {
+      background: #222b36;
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .danger {
+      background: #3a1f25;
+      border-color: #6a2e38;
+      color: var(--danger);
+    }
+
+    .yellow {
+      background: var(--yellow);
+      border-color: #ffd968;
+      color: #2b2110;
+    }
+
+    .tab-button {
+      background: #202832;
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .tab-button.active {
+      background: var(--blue);
+      color: #07111d;
+    }
+
+    .small {
+      font-size: 12px;
+      padding: 6px 8px;
+    }
+
+    .actions {
+      min-width: 140px;
+      position: relative;
+    }
+
+    .action-toggle {
+      width: 100%;
+    }
+
+    .action-list {
+      background: #1a212a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42);
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 170px;
+      padding: 8px;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      z-index: 25;
+    }
+
+    .action-list.open {
+      display: flex;
+    }
+
+    .action-list .small {
+      text-align: left;
+      width: 100%;
+    }
+
+    .action-list .small:hover {
+      transform: none;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      font-size: 14px;
+      min-width: 1180px;
+      box-shadow: none;
+    }
+
+    #summaryView table {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #summaryView th,
+    #summaryView td {
+      white-space: nowrap;
+    }
+
+    #bucketView table {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #bucketView th,
+    #bucketView td {
+      white-space: nowrap;
+    }
+
+    #bucketView .name-button {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #waveTeamsTable {
+      table-layout: fixed;
+      min-width: 0;
+    }
+
+    #waveTeamsTable th,
+    #waveTeamsTable td {
+      white-space: nowrap;
+    }
+
+    .cap-layout {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) 430px;
+      align-items: start;
+    }
+
+    #capView table,
+    #capLegendTable {
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    #capView th,
+    #capView td,
+    #capLegendTable th,
+    #capLegendTable td {
+      white-space: nowrap;
+    }
+
+    .cap-note-input {
+      min-width: 220px;
+    }
+
+    .cap-scale-cell {
+      font-weight: 700;
+    }
+
+    .cap-coaching {
+      background: #d9ead3;
+      color: #12220f;
+    }
+
+    .cap-verbal {
+      background: #fce4d6;
+      color: #29130a;
+    }
+
+    .cap-written {
+      background: #fff2cc;
+      color: #2a2104;
+    }
+
+    .cap-final {
+      background: #c65911;
+      color: #fff;
+    }
+
+    .cap-termination {
+      background: #ff0000;
+      color: #fff;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--border);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #1d2733;
+      color: #cdd9e6;
+      font-size: 13px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover {
+      background: #1b232d;
+    }
+
+    tbody tr.bucket-row {
+      background: rgba(245, 200, 75, 0.14);
+    }
+
+    tbody tr.bucket-row:hover {
+      background: rgba(245, 200, 75, 0.22);
+    }
+
+    tbody tr.dropoff-row {
+      background: rgba(74, 144, 217, 0.16);
+    }
+
+    tbody tr.dropoff-row:hover {
+      background: rgba(74, 144, 217, 0.24);
+    }
+
+    tbody tr.bucket-row.dropoff-row {
+      background: linear-gradient(90deg, rgba(74, 144, 217, 0.22), rgba(245, 200, 75, 0.14));
+    }
+
+    tbody tr.bucket-row.dropoff-row:hover {
+      background: linear-gradient(90deg, rgba(74, 144, 217, 0.3), rgba(245, 200, 75, 0.2));
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .sort-button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      text-align: left;
+      transform: none;
+    }
+
+    .sort-button:hover {
+      transform: none;
+      color: #8bbff0;
+    }
+
+    .name-button {
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      font-weight: 650;
+      padding: 0;
+      text-align: left;
+      white-space: normal;
+    }
+
+    .name-button:hover,
+    .name-button:focus {
+      color: #8bbff0;
+      transform: none;
+      text-decoration: underline;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 9px;
+      white-space: nowrap;
+    }
+
+    .badge.past {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--danger);
+    }
+
+    .badge.future {
+      background: rgba(52, 211, 153, 0.14);
+      color: var(--ok);
+    }
+
+    .badge.pastrequest {
+      background: rgba(203, 213, 225, 0.16);
+      color: #cbd5e1;
+    }
+
+    .badge.dropoff {
+      background: rgba(245, 200, 75, 0.16);
+      color: #f5c84b;
+    }
+
+    .badge.giveback30 {
+      background: rgba(74, 144, 217, 0.2);
+      color: #9fcbf4;
+    }
+
+    .badge.cluster {
+      background: rgba(216, 180, 254, 0.16);
+      color: #d8b4fe;
+    }
+
+    .badge.bucket {
+      background: rgba(245, 200, 75, 0.2);
+      color: var(--yellow);
+    }
+
+    .edited {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .text-danger {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .modal-backdrop {
+      align-items: center;
+      background: rgba(4, 8, 13, 0.72);
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      overflow-y: auto;
+      padding: 14px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: 20;
+    }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      max-height: calc(100vh - 28px);
+      max-width: 440px;
+      overflow-y: auto;
+      padding: 14px;
+      scrollbar-gutter: stable;
+      width: 100%;
+    }
+
+    .modal.wide {
+      max-width: 980px;
+    }
+
+    .modal .panel-title {
+      margin-bottom: 10px;
+    }
+
+    .modal-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .modal h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+
+    .modal .tabs {
+      margin-bottom: 10px;
+    }
+
+    .modal .filters {
+      gap: 8px;
+    }
+
+    .modal .table-wrap {
+      max-height: min(46vh, 430px);
+      overflow: auto;
+    }
+
+    .modal th,
+    .modal td {
+      padding: 8px 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .modal-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .occurrence-row {
+      cursor: pointer;
+    }
+
+    .occurrence-row:hover {
+      background: #1a2430;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .stats,
+      .cap-layout,
+      .filters,
+      .team-form,
+      .manual-form,
+      .cloud-grid,
+      .cloud-setup {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        justify-content: flex-start;
+      }
+
+      input[type="file"] {
+        max-width: none;
+      }
+
+      .status-line {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .form-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="hero">
@@ -22,7 +821,7 @@
       <div class="hero-actions">
         <div>
           <label for="fileInput">Import Excel or CSV</label>
-          <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" multiple aria-label="Import Excel or CSV">
+          <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" multiple>
         </div>
         <button id="templateBtn" class="yellow" type="button">Template</button>
         <button id="focusManualBtn" class="primary" type="button">Add Record</button>
@@ -129,12 +928,11 @@
       </form>
       <div class="table-wrap">
         <table id="waveTeamsTable" aria-label="Wave teams">
-          <caption>Teams and Scheduled Wave Dates</caption>
           <thead>
             <tr>
-              <th scope="col">Team</th>
-              <th scope="col">Wave Date</th>
-              <th scope="col">Actions</th>
+              <th>Team</th>
+              <th>Wave Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="waveTeamsBody"></tbody>
@@ -202,15 +1000,3846 @@
           <label for="manualFlagMonth">Flag Month</label>
           <input id="manualFlagMonth" type="month">
         </div>
+        <div>
+          <label for="manualReason">Reason</label>
+          <input id="manualReason" type="text" autocomplete="off">
+        </div>
+        <div>
+          <label for="manualStartTime">Start Time</label>
+          <input id="manualStartTime" type="time">
+        </div>
+        <div>
+          <label for="manualEndTime">End Time</label>
+          <input id="manualEndTime" type="time">
+        </div>
         <div class="form-actions">
-          <button class="primary" type="submit">Add</button>
-          <button type="reset" class="secondary">Reset</button>
+          <button class="primary" type="submit">Save Record</button>
+          <button class="secondary" type="reset">Reset</button>
         </div>
       </form>
     </section>
-    <!-- Other sections remain unchanged -->
+
+    <section class="panel" aria-label="Filters">
+      <div class="filters">
+        <div>
+          <label for="searchInput">Search</label>
+          <input id="searchInput" type="search" placeholder="Name, code, or reason">
+        </div>
+        <div>
+          <label for="nameFilter">Name</label>
+          <select id="nameFilter">
+            <option value="">All names</option>
+          </select>
+        </div>
+        <div>
+          <label for="codeFilter">Code</label>
+          <select id="codeFilter">
+            <option value="">All codes</option>
+          </select>
+        </div>
+        <div>
+          <label for="typeFilter">Status</label>
+          <select id="typeFilter">
+            <option value="">All records</option>
+            <option value="past">Occurrence</option>
+            <option value="future">Future Request</option>
+            <option value="pastrequest">Past Request</option>
+          </select>
+        </div>
+        <div>
+          <label for="followUpFilter">Flag</label>
+          <select id="followUpFilter">
+            <option value="">All flags</option>
+            <option value="giveback30">30 Day Give Back</option>
+            <option value="policyDropOffPending">Policy Drop Off Pending</option>
+            <option value="cluster">Cluster</option>
+          </select>
+        </div>
+        <button id="clearFiltersBtn" class="secondary" type="button">Clear</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="tabs" role="tablist" aria-label="Attendance views">
+        <button class="tab-button" id="recordsTab" type="button" role="tab" aria-selected="false" data-view="records">Records</button>
+        <button class="tab-button active" id="summaryTab" type="button" role="tab" aria-selected="true" data-view="summary">Point Summary by Agent</button>
+        <button class="tab-button" id="capTab" type="button" role="tab" aria-selected="false" data-view="cap">CAP Tracker</button>
+        <button class="tab-button" id="bucketTab" type="button" role="tab" aria-selected="false" data-view="bucket">Bucket</button>
+      </div>
+
+      <div id="recordsView" class="hidden" role="tabpanel" aria-labelledby="recordsTab">
+        <div class="table-wrap">
+          <table aria-label="Attendance records">
+            <thead>
+              <tr>
+                <th><button class="sort-button" type="button" data-sort="name">Name <span id="sortName"></span></button></th>
+                <th><button class="sort-button" type="button" data-sort="date">Date <span id="sortDate"></span></button></th>
+                <th><button class="sort-button" type="button" data-sort="type">Status <span id="sortType"></span></button></th>
+                <th>Flag</th>
+                <th><button class="sort-button" type="button" data-sort="code">Code <span id="sortCode"></span></button></th>
+                <th>Reason</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th><button class="sort-button" type="button" data-sort="points">Points <span id="sortPoints"></span></button></th>
+                <th>Original Points</th>
+                <th>Original Excel Name</th>
+                <th>Actions</th>
+                <th>Source File</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
+        <div id="recordsEmpty" class="empty hidden">No records match the current filters.</div>
+      </div>
+
+      <div id="summaryView" role="tabpanel" aria-labelledby="summaryTab">
+        <div class="table-wrap">
+          <table aria-label="Point summary by agent">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Total Records</th>
+                <th>Occurrences</th>
+                <th>Past Requests</th>
+                <th>Future Requests</th>
+                <th>Total Points</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+        <div id="summaryEmpty" class="empty hidden">No summary rows match the current filters.</div>
+      </div>
+
+      <div id="capView" class="hidden" role="tabpanel" aria-labelledby="capTab">
+        <div class="cap-layout">
+          <div>
+            <div class="table-wrap">
+              <table aria-label="CAP tracker">
+                <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Sup</th>
+                    <th>Total Points</th>
+                    <th>Curr CAP Level</th>
+                    <th>Issue Date</th>
+                    <th>CAP they need to be on</th>
+                  </tr>
+                </thead>
+                <tbody id="capBody"></tbody>
+              </table>
+            </div>
+            <div id="capEmpty" class="empty hidden">No CAP rows match the current filters.</div>
+          </div>
+          <div class="table-wrap">
+            <table id="capLegendTable" aria-label="CAP color scale legend">
+              <thead>
+                <tr>
+                  <th>Color Scale</th>
+                  <th>Guidelines for Points</th>
+                  <th>Type of Warning</th>
+                  <th>Duration of Corrective Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cap-coaching"></td>
+                  <td>0.5 - 2 points</td>
+                  <td>Coaching</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="cap-verbal"></td>
+                  <td>&gt; 2 points</td>
+                  <td>Verbal</td>
+                  <td>30 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-written"></td>
+                  <td>6 points</td>
+                  <td>Written</td>
+                  <td>60 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-final"></td>
+                  <td>9 points</td>
+                  <td>Final</td>
+                  <td>30 days</td>
+                </tr>
+                <tr>
+                  <td class="cap-termination"></td>
+                  <td>12 points</td>
+                  <td>Termination</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="bucketView" class="hidden" role="tabpanel" aria-labelledby="bucketTab">
+        <div class="table-wrap">
+          <table aria-label="Approved time off bucket by employee">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Wave Team</th>
+                <th>Wave Date</th>
+                <th>PTO</th>
+                <th>ATO</th>
+                <th>Total</th>
+                <th>Used</th>
+                <th>Remaining</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bucketBody"></tbody>
+          </table>
+        </div>
+        <div id="bucketEmpty" class="empty hidden">No employees match the current filters.</div>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js"></script>
+  <div id="editModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <form id="editForm" class="modal">
+      <h2 id="editModalTitle">Edit Record</h2>
+      <input id="editRowId" type="hidden">
+      <input id="editField" type="hidden">
+      <div>
+        <label id="editValueLabel" for="editValue">Value</label>
+        <input id="editValue" type="text" autocomplete="off" required>
+        <select id="editStatusSelect" class="hidden">
+          <option value="past">Occurrence</option>
+          <option value="future">Future Request</option>
+          <option value="pastrequest">Past Request</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="secondary" id="cancelEditBtn" type="button">Cancel</button>
+        <button class="primary" type="submit">Save Change</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="employeeModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="employeeModalTitle">
+    <section class="modal wide">
+      <div class="panel-title">
+        <h2 id="employeeModalTitle">Employee Occurrences</h2>
+        <div class="modal-header-actions">
+          <button class="danger" id="deleteAgentBtn" type="button">Delete Agent</button>
+          <button class="secondary" id="closeEmployeeModalBtn" type="button">Close</button>
+        </div>
+      </div>
+      <p id="employeeModalSummary" class="muted"></p>
+      <input id="employeeModalName" type="hidden">
+      <div class="tabs compact-tabs" role="tablist" aria-label="Employee occurrence views">
+        <button class="tab-button active" id="employeeOccurrencesTab" type="button" role="tab" aria-selected="true" data-employee-modal-view="occurrences">Occurrences</button>
+        <button class="tab-button" id="employeeBucketTab" type="button" role="tab" aria-selected="false" data-employee-modal-view="bucket">Bucket Occurrences</button>
+      </div>
+      <div id="employeeOccurrencesView" role="tabpanel" aria-labelledby="employeeOccurrencesTab">
+        <div class="table-wrap">
+          <table aria-label="Employee occurrences">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Flag</th>
+                <th>Code</th>
+                <th>Reason</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Points</th>
+                <th>Source File</th>
+              </tr>
+            </thead>
+            <tbody id="employeeOccurrencesBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="employeeBucketView" class="hidden" role="tabpanel" aria-labelledby="employeeBucketTab">
+        <div class="filters">
+          <div>
+            <label for="employeeBucketTeam">Wave Team</label>
+            <select id="employeeBucketTeam">
+              <option value="">Unassigned</option>
+              <option value="alicias">Alicia's Team</option>
+              <option value="aliciasPt2">Alicia's Team PT.2</option>
+              <option value="taylors">Taylor's Team</option>
+            </select>
+          </div>
+          <div>
+            <label>Wave Date</label>
+            <p id="employeeBucketWave" class="muted"></p>
+          </div>
+          <div>
+            <label for="employeeBucketDays">Total Bucket Days</label>
+            <input id="employeeBucketDays" type="text" readonly>
+          </div>
+          <div>
+            <label>PTO / ATO</label>
+            <p id="employeeBucketAccrual" class="muted"></p>
+          </div>
+          <div>
+            <label>Bucket Status</label>
+            <p id="employeeBucketSummary" class="muted"></p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table aria-label="Employee bucket occurrences">
+            <thead>
+              <tr>
+                <th>Use Bucket</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Code</th>
+                <th>Reason</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="employeeBucketOccurrencesBody"></tbody>
+          </table>
+        </div>
+        <div id="employeeBucketOccurrencesEmpty" class="empty hidden">No occurrences found for this employee.</div>
+        <div class="modal-actions">
+          <button class="primary" id="saveEmployeeBucketBtn" type="button">Save Bucket Occurrences</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="occurrenceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="occurrenceModalTitle">
+    <form id="occurrenceForm" class="modal wide">
+      <div class="panel-title">
+        <h2 id="occurrenceModalTitle">Edit Occurrence</h2>
+      </div>
+      <input id="occurrenceRowId" type="hidden">
+      <div class="modal-grid">
+        <div>
+          <label for="occurrenceName">Employee Name</label>
+          <input id="occurrenceName" type="text" autocomplete="off" required>
+        </div>
+        <div>
+          <label for="occurrenceDate">Date</label>
+          <input id="occurrenceDate" type="date" required>
+        </div>
+        <div>
+          <label for="occurrenceStatus">Status</label>
+          <select id="occurrenceStatus">
+            <option value="past">Occurrence</option>
+            <option value="future">Future Request</option>
+            <option value="pastrequest">Past Request</option>
+          </select>
+        </div>
+        <fieldset class="flag-field">
+          <legend>Flag</legend>
+          <div class="flag-options">
+            <label class="check-option">
+              <input name="occurrenceFlag" type="checkbox" value="cluster">
+              <span>Cluster</span>
+            </label>
+            <label class="check-option">
+              <input name="occurrenceFlag" type="checkbox" value="giveback30">
+              <span>30 Day Give Back</span>
+            </label>
+            <label class="check-option">
+              <input name="occurrenceFlag" type="checkbox" value="policyDropOffPending">
+              <span>Policy Drop Off Pending</span>
+            </label>
+          </div>
+        </fieldset>
+        <div id="occurrenceFollowUpMonthGroup" class="hidden">
+          <label for="occurrenceFollowUpMonth">Flag Month</label>
+          <input id="occurrenceFollowUpMonth" type="month">
+        </div>
+        <div>
+          <label for="occurrenceCode">Code</label>
+          <input id="occurrenceCode" type="text" autocomplete="off">
+        </div>
+        <div>
+          <label for="occurrenceStartTime">Start Time</label>
+          <input id="occurrenceStartTime" type="time">
+        </div>
+        <div>
+          <label for="occurrenceEndTime">End Time</label>
+          <input id="occurrenceEndTime" type="time">
+        </div>
+        <div>
+          <label for="occurrencePoints">Points</label>
+          <input id="occurrencePoints" type="number" step="0.25" required>
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <label for="occurrenceReason">Reason</label>
+          <input id="occurrenceReason" type="text" autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="secondary" id="cancelOccurrenceBtn" type="button">Cancel</button>
+        <button class="primary" type="submit">Save Occurrence</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="bucketModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="bucketModalTitle">
+    <section class="modal wide">
+      <div class="panel-title">
+        <h2 id="bucketModalTitle">Manage Bucket</h2>
+        <button class="secondary" id="closeBucketModalBtn" type="button">Close</button>
+      </div>
+      <p id="bucketModalSummary" class="muted"></p>
+      <input id="bucketEmployeeName" type="hidden">
+      <div class="table-wrap">
+        <table aria-label="Bucket occurrence assignment">
+          <thead>
+            <tr>
+              <th>Use Bucket</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Code</th>
+              <th>Reason</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody id="bucketOccurrencesBody"></tbody>
+        </table>
+      </div>
+      <div id="bucketOccurrencesEmpty" class="empty hidden">No occurrences found for this employee.</div>
+      <div class="modal-actions">
+        <button class="secondary" id="cancelBucketBtn" type="button">Cancel</button>
+        <button class="primary" id="saveBucketBtn" type="button">Save Bucket Uses</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'attendanceTrackerSavedRowsV4';
+      var BUCKET_STORAGE_KEY = 'attendanceTrackerBucketsV1';
+      var TEAM_STORAGE_KEY = 'attendanceTrackerWaveTeamsV1';
+      var CAP_STORAGE_KEY = 'attendanceTrackerCapSettingsV1';
+      var CLOUD_CONFIG_KEY = 'attendanceTrackerCloudConfigV1';
+      var CLOUD_TOKEN_KEY = 'attendanceTrackerCloudTokenV1';
+      var CLOUD_AUTH_STATE_KEY = 'attendanceTrackerCloudAuthStateV1';
+      var TEAM_REFERENCE_SPREADSHEET_ID = '1YDXgyILiIO_c6n0cgN_Yy5vrMBUIQMXOvE8WvDq0peU';
+      var rows = [];
+      var buckets = {};
+      var capSettings = {};
+      var cloudConfig = {
+        clientId: '',
+        spreadsheetId: TEAM_REFERENCE_SPREADSHEET_ID,
+        autoSync: false
+      };
+      var cloudTokenClient = null;
+      var cloudAccessToken = '';
+      var cloudTokenExpiresAt = 0;
+      var cloudTokenPendingResolve = null;
+      var cloudTokenPendingReject = null;
+      var cloudTokenErrorTimer = null;
+      var cloudSyncTimer = null;
+      var cloudSyncInFlight = false;
+      var suppressCloudSync = false;
+      var sortKey = 'date';
+      var sortAsc = false;
+      var activeView = 'summary';
+      var manualStatusTimer = null;
+      var STATUS_CONFIG = {
+        past: { label: 'Occurrence', badge: 'past' },
+        future: { label: 'Future Request', badge: 'future' },
+        pastrequest: { label: 'Past Request', badge: 'pastrequest' }
+      };
+      var STATUS_VALUES = Object.keys(STATUS_CONFIG);
+      var FOLLOW_UP_CONFIG = {
+        giveback30: { label: '30 Day Give Back', badge: 'giveback30' },
+        policyDropOffPending: { label: 'Policy Drop Off Pending', badge: 'dropoff' },
+        cluster: { label: 'Cluster', badge: 'cluster' }
+      };
+      var FOLLOW_UP_VALUES = Object.keys(FOLLOW_UP_CONFIG);
+      var DEFAULT_TEAM_CONFIG = {
+        alicias: { label: "Alicia's Team", waveDate: '2025-10-01' },
+        aliciasPt2: { label: "Alicia's Team PT.2", waveDate: '2025-08-01' },
+        taylors: { label: "Taylor's Team", waveDate: '2026-05-01' }
+      };
+      var TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+      var FIRST_YEAR_PTO_DAYS = 5;
+      var FIRST_YEAR_ATO_DAYS = 12;
+      var AFTER_YEAR_PTO_DAYS = 12;
+      var AFTER_YEAR_ATO_DAYS = 5;
+      var CAP_LEVELS = [
+        { label: 'Termination', min: 12, className: 'cap-termination', duration: '' },
+        { label: 'Final', min: 9, className: 'cap-final', duration: '30 days' },
+        { label: 'Written', min: 6, className: 'cap-written', duration: '60 days' },
+        { label: 'Verbal', min: 2.000001, className: 'cap-verbal', duration: '30 days' },
+        { label: 'Coaching', min: 0.5, className: 'cap-coaching', duration: '' }
+      ];
+
+      var aliases = {
+        name: ['name', 'agent', 'agent name', 'employee', 'employee name', 'employee full name', 'full name', 'team member', 'team member name', 'associate', 'associate name', 'rep', 'representative', 'csr', 'advisor', 'advocate', 'specialist', 'person', 'person name'],
+        date: ['date', 'attendance date', 'request date', 'occurrence date', 'start date', 'day'],
+        code: ['code', 'attendance code', 'type', 'attendance type', 'category', 'event code'],
+        reason: ['reason', 'notes', 'note', 'comment', 'comments', 'description', 'details'],
+        startTime: ['start time', 'start', 'from', 'begin', 'begin time', 'time start', 'starttime'],
+        endTime: ['end time', 'end', 'to', 'stop', 'stop time', 'time end', 'endtime'],
+        points: ['points', 'point', 'occurrence points', 'attendance points', 'pts'],
+        followUp: ['flag', 'follow up', 'follow-up', 'followup', 'point status', 'policy status', 'drop off status', 'give back status', 'cluster'],
+        followUpMonth: ['flag month', 'give back month', '30 day month', 'thirty day month', 'follow up month', 'follow-up month'],
+        team: ['team', 'wave team', 'employee team', 'manager team', 'supervisor team', 'group', 'department', 'manager', 'supervisor'],
+        waveDate: ['wave date', 'hire date', 'start date', 'company start date', 'seniority date', 'tenure date']
+      };
+
+      var fuzzyTokens = {
+        name: ['name', 'agent', 'employee', 'member', 'associate', 'rep', 'representative', 'csr', 'advisor', 'advocate', 'specialist', 'person'],
+        date: ['date', 'day'],
+        code: ['code', 'type', 'category', 'event'],
+        reason: ['reason', 'note', 'comment', 'description', 'detail'],
+        startTime: ['start', 'from', 'begin', 'starttime'],
+        endTime: ['end', 'to', 'stop', 'endtime'],
+        points: ['point', 'points', 'pts'],
+        followUp: ['flag', 'follow', 'giveback', 'dropoff', 'cluster', 'policy'],
+        followUpMonth: ['month', 'givebackmonth', 'flagmonth'],
+        team: ['team', 'group', 'department', 'manager', 'supervisor'],
+        waveDate: ['wave', 'hire', 'seniority', 'tenure']
+      };
+
+      var fields = ['name', 'date', 'code', 'reason', 'startTime', 'endTime', 'points', 'followUp', 'followUpMonth', 'team', 'waveDate'];
+      var aliasSets = {};
+
+      fields.forEach(function (field) {
+        aliasSets[field] = new Set(aliases[field].map(cleanHeader));
+      });
+
+      var els = {
+        fileInput: document.getElementById('fileInput'),
+        templateBtn: document.getElementById('templateBtn'),
+        focusManualBtn: document.getElementById('focusManualBtn'),
+        exportBtn: document.getElementById('exportBtn'),
+        dedupeBtn: document.getElementById('dedupeBtn'),
+        clearSavedBtn: document.getElementById('clearSavedBtn'),
+        cloudClientIdInput: document.getElementById('cloudClientIdInput'),
+        cloudSheetIdInput: document.getElementById('cloudSheetIdInput'),
+        cloudConnectBtn: document.getElementById('cloudConnectBtn'),
+        cloudRedirectBtn: document.getElementById('cloudRedirectBtn'),
+        cloudCreateSheetBtn: document.getElementById('cloudCreateSheetBtn'),
+        cloudPushBtn: document.getElementById('cloudPushBtn'),
+        cloudPullBtn: document.getElementById('cloudPullBtn'),
+        cloudAutoSyncToggle: document.getElementById('cloudAutoSyncToggle'),
+        cloudOriginValue: document.getElementById('cloudOriginValue'),
+        copyCloudOriginBtn: document.getElementById('copyCloudOriginBtn'),
+        cloudRedirectValue: document.getElementById('cloudRedirectValue'),
+        copyCloudRedirectBtn: document.getElementById('copyCloudRedirectBtn'),
+        cloudAuthUrlValue: document.getElementById('cloudAuthUrlValue'),
+        copyCloudAuthUrlBtn: document.getElementById('copyCloudAuthUrlBtn'),
+        cloudStatus: document.getElementById('cloudStatus'),
+        waveTeamForm: document.getElementById('waveTeamForm'),
+        waveTeamKey: document.getElementById('waveTeamKey'),
+        waveTeamName: document.getElementById('waveTeamName'),
+        waveTeamDate: document.getElementById('waveTeamDate'),
+        waveTeamStatus: document.getElementById('waveTeamStatus'),
+        saveWaveTeamBtn: document.getElementById('saveWaveTeamBtn'),
+        newWaveTeamBtn: document.getElementById('newWaveTeamBtn'),
+        waveTeamsBody: document.getElementById('waveTeamsBody'),
+        manualForm: document.getElementById('manualForm'),
+        manualStatus: document.getElementById('manualStatus'),
+        manualName: document.getElementById('manualName'),
+        manualTeam: document.getElementById('manualTeam'),
+        manualDate: document.getElementById('manualDate'),
+        manualCode: document.getElementById('manualCode'),
+        manualPoints: document.getElementById('manualPoints'),
+        manualStatusSelect: document.getElementById('manualStatusSelect'),
+        manualFlagInputs: document.querySelectorAll('input[name="manualFlag"]'),
+        manualFlagMonth: document.getElementById('manualFlagMonth'),
+        manualFlagMonthGroup: document.getElementById('manualFlagMonthGroup'),
+        manualReason: document.getElementById('manualReason'),
+        manualStartTime: document.getElementById('manualStartTime'),
+        manualEndTime: document.getElementById('manualEndTime'),
+        savedStatus: document.getElementById('savedStatus'),
+        filterStatus: document.getElementById('filterStatus'),
+        statTotal: document.getElementById('statTotal'),
+        statPast: document.getElementById('statPast'),
+        statFuture: document.getElementById('statFuture'),
+        statPoints: document.getElementById('statPoints'),
+        searchInput: document.getElementById('searchInput'),
+        nameFilter: document.getElementById('nameFilter'),
+        codeFilter: document.getElementById('codeFilter'),
+        typeFilter: document.getElementById('typeFilter'),
+        followUpFilter: document.getElementById('followUpFilter'),
+        clearFiltersBtn: document.getElementById('clearFiltersBtn'),
+        recordsTab: document.getElementById('recordsTab'),
+        summaryTab: document.getElementById('summaryTab'),
+        capTab: document.getElementById('capTab'),
+        bucketTab: document.getElementById('bucketTab'),
+        recordsView: document.getElementById('recordsView'),
+        summaryView: document.getElementById('summaryView'),
+        capView: document.getElementById('capView'),
+        bucketView: document.getElementById('bucketView'),
+        recordsBody: document.getElementById('recordsBody'),
+        recordsEmpty: document.getElementById('recordsEmpty'),
+        summaryBody: document.getElementById('summaryBody'),
+        summaryEmpty: document.getElementById('summaryEmpty'),
+        capBody: document.getElementById('capBody'),
+        capEmpty: document.getElementById('capEmpty'),
+        bucketBody: document.getElementById('bucketBody'),
+        bucketEmpty: document.getElementById('bucketEmpty'),
+        editModal: document.getElementById('editModal'),
+        editForm: document.getElementById('editForm'),
+        editModalTitle: document.getElementById('editModalTitle'),
+        editRowId: document.getElementById('editRowId'),
+        editField: document.getElementById('editField'),
+        editValueLabel: document.getElementById('editValueLabel'),
+        editValue: document.getElementById('editValue'),
+        editStatusSelect: document.getElementById('editStatusSelect'),
+        cancelEditBtn: document.getElementById('cancelEditBtn'),
+        employeeModal: document.getElementById('employeeModal'),
+        employeeModalTitle: document.getElementById('employeeModalTitle'),
+        employeeModalSummary: document.getElementById('employeeModalSummary'),
+        employeeModalName: document.getElementById('employeeModalName'),
+        employeeOccurrencesTab: document.getElementById('employeeOccurrencesTab'),
+        employeeBucketTab: document.getElementById('employeeBucketTab'),
+        employeeOccurrencesView: document.getElementById('employeeOccurrencesView'),
+        employeeBucketView: document.getElementById('employeeBucketView'),
+        employeeOccurrencesBody: document.getElementById('employeeOccurrencesBody'),
+        employeeBucketTeam: document.getElementById('employeeBucketTeam'),
+        employeeBucketWave: document.getElementById('employeeBucketWave'),
+        employeeBucketDays: document.getElementById('employeeBucketDays'),
+        employeeBucketAccrual: document.getElementById('employeeBucketAccrual'),
+        employeeBucketSummary: document.getElementById('employeeBucketSummary'),
+        employeeBucketOccurrencesBody: document.getElementById('employeeBucketOccurrencesBody'),
+        employeeBucketOccurrencesEmpty: document.getElementById('employeeBucketOccurrencesEmpty'),
+        saveEmployeeBucketBtn: document.getElementById('saveEmployeeBucketBtn'),
+        deleteAgentBtn: document.getElementById('deleteAgentBtn'),
+        closeEmployeeModalBtn: document.getElementById('closeEmployeeModalBtn'),
+        occurrenceModal: document.getElementById('occurrenceModal'),
+        occurrenceForm: document.getElementById('occurrenceForm'),
+        occurrenceRowId: document.getElementById('occurrenceRowId'),
+        occurrenceName: document.getElementById('occurrenceName'),
+        occurrenceDate: document.getElementById('occurrenceDate'),
+        occurrenceStatus: document.getElementById('occurrenceStatus'),
+        occurrenceFlagInputs: document.querySelectorAll('input[name="occurrenceFlag"]'),
+        occurrenceFollowUpMonth: document.getElementById('occurrenceFollowUpMonth'),
+        occurrenceFollowUpMonthGroup: document.getElementById('occurrenceFollowUpMonthGroup'),
+        occurrenceCode: document.getElementById('occurrenceCode'),
+        occurrenceReason: document.getElementById('occurrenceReason'),
+        occurrenceStartTime: document.getElementById('occurrenceStartTime'),
+        occurrenceEndTime: document.getElementById('occurrenceEndTime'),
+        occurrencePoints: document.getElementById('occurrencePoints'),
+        cancelOccurrenceBtn: document.getElementById('cancelOccurrenceBtn'),
+        bucketModal: document.getElementById('bucketModal'),
+        bucketModalTitle: document.getElementById('bucketModalTitle'),
+        bucketModalSummary: document.getElementById('bucketModalSummary'),
+        bucketEmployeeName: document.getElementById('bucketEmployeeName'),
+        bucketOccurrencesBody: document.getElementById('bucketOccurrencesBody'),
+        bucketOccurrencesEmpty: document.getElementById('bucketOccurrencesEmpty'),
+        closeBucketModalBtn: document.getElementById('closeBucketModalBtn'),
+        cancelBucketBtn: document.getElementById('cancelBucketBtn'),
+        saveBucketBtn: document.getElementById('saveBucketBtn')
+      };
+
+      function cleanHeader(value) {
+        return String(value == null ? '' : value)
+          .toLowerCase()
+          .replace(/[_./\\()[\]{}-]+/g, ' ')
+          .replace(/[^\w\s]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      function norm(value) {
+        return cleanHeader(value);
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function isBlank(value) {
+        return value == null || String(value).trim() === '';
+      }
+
+      function toText(value) {
+        if (value == null) return '';
+        if (value instanceof Date && !isNaN(value)) return formatDate(value);
+        return String(value).trim();
+      }
+
+      function headerMatchScore(value, field) {
+        var header = cleanHeader(value);
+        if (!header) return 0;
+        var compact = header.replace(/\s+/g, '');
+        if (aliasSets[field].has(header)) return 4;
+
+        for (var i = 0; i < aliases[field].length; i += 1) {
+          var alias = cleanHeader(aliases[field][i]);
+          var compactAlias = alias.replace(/\s+/g, '');
+          if (alias && (header.indexOf(alias) !== -1 || compact.indexOf(compactAlias) !== -1)) {
+            return 3;
+          }
+        }
+
+        for (var j = 0; j < fuzzyTokens[field].length; j += 1) {
+          var token = fuzzyTokens[field][j];
+          if (header.indexOf(token) !== -1 || compact.indexOf(token) !== -1) return 1;
+        }
+
+        return 0;
+      }
+
+      function detectHeaderRow(matrix) {
+        var maxRows = Math.min(matrix.length, 15);
+        var bestIndex = 0;
+        var bestScore = -1;
+
+        for (var r = 0; r < maxRows; r += 1) {
+          var row = matrix[r] || [];
+          var score = 0;
+
+          fields.forEach(function (field) {
+            var fieldScore = 0;
+            row.forEach(function (cell) {
+              fieldScore = Math.max(fieldScore, headerMatchScore(cell, field));
+            });
+            score += fieldScore;
+          });
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = r;
+          }
+        }
+
+        return {
+          index: bestIndex,
+          score: bestScore
+        };
+      }
+
+      function buildColumnMap(headers) {
+        var used = new Set();
+        var map = {};
+
+        fields.forEach(function (field) {
+          var bestIndex = -1;
+          var bestScore = 0;
+
+          headers.forEach(function (header, index) {
+            if (used.has(index)) return;
+            var score = headerMatchScore(header, field);
+            if (score > bestScore) {
+              bestScore = score;
+              bestIndex = index;
+            }
+          });
+
+          if (bestIndex >= 0 && bestScore > 0) {
+            map[field] = bestIndex;
+            used.add(bestIndex);
+          }
+        });
+
+        return map;
+      }
+
+      function getMappedValue(row, map, field) {
+        if (map[field] == null) return '';
+        return row[map[field]];
+      }
+
+      function excelDateToJSDate(value) {
+        var serial = Number(value);
+        if (!Number.isFinite(serial)) return null;
+        var utc = Math.round((Math.floor(serial) - 25569) * 86400 * 1000);
+        var date = new Date(utc);
+        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      }
+
+      function parseDate(value) {
+        if (value instanceof Date && !isNaN(value)) {
+          return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+        }
+
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          return excelDateToJSDate(value);
+        }
+
+        if (isBlank(value)) return null;
+
+        var text = String(value).trim();
+        var numeric = Number(text);
+        if (text !== '' && Number.isFinite(numeric) && numeric > 1000) {
+          return excelDateToJSDate(numeric);
+        }
+
+        var isoDateOnly = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (isoDateOnly) {
+          return new Date(Number(isoDateOnly[1]), Number(isoDateOnly[2]) - 1, Number(isoDateOnly[3]));
+        }
+
+        var slashDate = text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/);
+        if (slashDate) {
+          var year = Number(slashDate[3]);
+          if (year < 100) year += 2000;
+          return new Date(year, Number(slashDate[1]) - 1, Number(slashDate[2]));
+        }
+
+        var parsed = new Date(text);
+        if (!isNaN(parsed)) {
+          return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+        }
+
+        return null;
+      }
+
+      function formatDate(date) {
+        if (!(date instanceof Date) || isNaN(date)) return '';
+        return date.toLocaleDateString();
+      }
+
+      function formatTime(value) {
+        if (value instanceof Date && !isNaN(value)) {
+          return value.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        }
+
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          return formatSerialTime(value);
+        }
+
+        if (isBlank(value)) return '';
+
+        var text = String(value).trim();
+        var numeric = Number(text);
+        if (Number.isFinite(numeric) && numeric >= 0 && numeric < 2) {
+          return formatSerialTime(numeric);
+        }
+
+        var timeMatch = text.match(/^(\d{1,2})(?::(\d{2}))?(?::(\d{2}))?\s*(am|pm)?$/i);
+        if (timeMatch) {
+          var hour = Number(timeMatch[1]);
+          var minute = Number(timeMatch[2] || 0);
+          var suffix = (timeMatch[4] || '').toLowerCase();
+          if (suffix === 'pm' && hour < 12) hour += 12;
+          if (suffix === 'am' && hour === 12) hour = 0;
+          if (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
+            return new Date(2000, 0, 1, hour, minute).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+          }
+        }
+
+        return text;
+      }
+
+      function formatSerialTime(value) {
+        var fraction = Number(value) % 1;
+        if (fraction < 0) fraction += 1;
+        var totalMinutes = Math.round(fraction * 24 * 60);
+        totalMinutes = totalMinutes % (24 * 60);
+        var hour = Math.floor(totalMinutes / 60);
+        var minute = totalMinutes % 60;
+        return new Date(2000, 0, 1, hour, minute).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      }
+
+      function toTimeInputValue(value) {
+        if (isBlank(value)) return '';
+        var text = String(value).trim().toLowerCase();
+        var matched = text.match(/^(\d{1,2}):(\d{2})\s*(am|pm)?$/);
+        if (!matched) return '';
+        var hour = Number(matched[1]);
+        var minute = Number(matched[2]);
+        var suffix = matched[3] || '';
+        if (suffix === 'pm' && hour < 12) hour += 12;
+        if (suffix === 'am' && hour === 12) hour = 0;
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return '';
+        return String(hour).padStart(2, '0') + ':' + String(minute).padStart(2, '0');
+      }
+
+      function parsePoints(value) {
+        if (typeof value === 'number' && Number.isFinite(value)) return value;
+        if (isBlank(value)) return 0;
+        var parsed = Number(String(value).replace(/,/g, '').trim());
+        return Number.isFinite(parsed) ? parsed : 0;
+      }
+
+      function formatPoints(value) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) return '0';
+        return number.toLocaleString(undefined, { maximumFractionDigits: 3 });
+      }
+
+      function formatBucketDays(value) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) return '0';
+        return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+      }
+
+      function roundBucketDays(value) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) return 0;
+        return Math.round(number * 100) / 100;
+      }
+
+      function normalizeWaveDate(value) {
+        var parsed = parseDate(value);
+        return parsed && !isNaN(parsed) ? dateKey(parsed) : '';
+      }
+
+      function formatWaveDate(value) {
+        var parsed = parseDate(value);
+        return parsed && !isNaN(parsed) ? formatDate(parsed) : '';
+      }
+
+      function cloneTeamConfig(source) {
+        var copy = {};
+        Object.keys(source || {}).forEach(function (key) {
+          copy[key] = {
+            label: toText(source[key].label),
+            waveDate: normalizeWaveDate(source[key].waveDate)
+          };
+        });
+        return copy;
+      }
+
+      function teamValues() {
+        return Object.keys(TEAM_CONFIG).sort(function (a, b) {
+          return teamLabel(a).localeCompare(teamLabel(b), undefined, { sensitivity: 'base' });
+        });
+      }
+
+      function makeTeamKey(label) {
+        var base = cleanHeader(label).replace(/\s+/g, '');
+        if (!base) base = 'team';
+        var key = base;
+        var suffix = 2;
+        while (TEAM_CONFIG[key]) {
+          key = base + suffix;
+          suffix += 1;
+        }
+        return key;
+      }
+
+      function normalizeTeam(value) {
+        if (TEAM_CONFIG[value]) return value;
+        var normalized = norm(value);
+        var compact = normalized.replace(/\s+/g, '');
+        if (!compact) return '';
+        var keys = Object.keys(TEAM_CONFIG);
+        for (var i = 0; i < keys.length; i += 1) {
+          var key = keys[i];
+          var label = norm(TEAM_CONFIG[key].label);
+          if (norm(key) === normalized || label === normalized || label.replace(/\s+/g, '') === compact) return key;
+        }
+        var looksLikeAlicia = compact.indexOf('alicia') !== -1 || compact.indexOf('aclia') !== -1;
+        if (looksLikeAlicia && (compact.indexOf('pt2') !== -1 || compact.indexOf('part2') !== -1 || compact.indexOf('2') !== -1)) return 'aliciasPt2';
+        if (looksLikeAlicia) return 'alicias';
+        if (compact.indexOf('taylor') !== -1) return 'taylors';
+        return '';
+      }
+
+      function inferTeam(sourceFile, sourceSheet) {
+        return normalizeTeam([sourceFile, sourceSheet].filter(Boolean).join(' '));
+      }
+
+      function teamLabel(value) {
+        var team = normalizeTeam(value);
+        return team && TEAM_CONFIG[team] ? TEAM_CONFIG[team].label : '';
+      }
+
+      function teamWaveDate(value) {
+        var team = normalizeTeam(value);
+        return team && TEAM_CONFIG[team] ? TEAM_CONFIG[team].waveDate : '';
+      }
+
+      function teamFromWaveDate(value) {
+        var normalizedDate = normalizeWaveDate(value);
+        if (!normalizedDate) return '';
+        var keys = teamValues();
+        for (var i = 0; i < keys.length; i += 1) {
+          if (TEAM_CONFIG[keys[i]].waveDate === normalizedDate) return keys[i];
+        }
+        return '';
+      }
+
+      function teamSelectOptions(selectedTeam) {
+        var selected = normalizeTeam(selectedTeam);
+        var options = ['<option value="">Unassigned</option>'];
+        teamValues().forEach(function (team) {
+          options.push('<option value="' + escapeHtml(team) + '"' + (team === selected ? ' selected' : '') + '>' + escapeHtml(TEAM_CONFIG[team].label) + '</option>');
+        });
+        return options.join('');
+      }
+
+      function refreshTeamSelectOptions() {
+        var manualValue = els.manualTeam ? els.manualTeam.value : '';
+        if (els.manualTeam) els.manualTeam.innerHTML = teamSelectOptions(manualValue);
+        var employeeValue = els.employeeBucketTeam ? els.employeeBucketTeam.value : '';
+        if (els.employeeBucketTeam) els.employeeBucketTeam.innerHTML = teamSelectOptions(employeeValue);
+      }
+
+      function todayMidnight() {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      }
+
+      function addYears(date, years) {
+        var next = new Date(date.getFullYear() + years, date.getMonth(), date.getDate());
+        if (next.getMonth() !== date.getMonth()) next.setDate(0);
+        next.setHours(0, 0, 0, 0);
+        return next;
+      }
+
+      function daysBetween(start, end) {
+        return Math.max(0, (end.getTime() - start.getTime()) / 86400000);
+      }
+
+      function calculateBucketAccrual(waveDateValue) {
+        var waveDate = parseDate(waveDateValue);
+        if (!(waveDate instanceof Date) || isNaN(waveDate)) {
+          return { hasWaveDate: false, ptoDays: 0, atoDays: 0, totalDays: 0 };
+        }
+
+        var today = todayMidnight();
+        waveDate.setHours(0, 0, 0, 0);
+        if (today <= waveDate) {
+          return { hasWaveDate: true, ptoDays: 0, atoDays: 0, totalDays: 0 };
+        }
+
+        var firstAnniversary = addYears(waveDate, 1);
+        var firstPeriodEnd = today < firstAnniversary ? today : firstAnniversary;
+        var firstYearDays = daysBetween(waveDate, firstPeriodEnd);
+        var afterFirstYearDays = today > firstAnniversary ? daysBetween(firstAnniversary, today) : 0;
+        var ptoDays = (firstYearDays / 365 * FIRST_YEAR_PTO_DAYS) + (afterFirstYearDays / 365 * AFTER_YEAR_PTO_DAYS);
+        var atoDays = (firstYearDays / 365 * FIRST_YEAR_ATO_DAYS) + (afterFirstYearDays / 365 * AFTER_YEAR_ATO_DAYS);
+
+        ptoDays = roundBucketDays(ptoDays);
+        atoDays = roundBucketDays(atoDays);
+        return {
+          hasWaveDate: true,
+          ptoDays: ptoDays,
+          atoDays: atoDays,
+          totalDays: roundBucketDays(ptoDays + atoDays)
+        };
+      }
+
+      function bucketKey(name) {
+        return norm(name);
+      }
+
+      function capKey(name) {
+        return bucketKey(name);
+      }
+
+      function sameEmployeeName(first, second) {
+        var firstKey = bucketKey(first);
+        var secondKey = bucketKey(second);
+        return Boolean(firstKey && secondKey && firstKey === secondKey);
+      }
+
+      function preferredEmployeeDisplayName(row) {
+        return toText(row && (row.originalName || row.displayName || row.name));
+      }
+
+      function rememberEmployeeName(map, name, preferred) {
+        var key = bucketKey(name);
+        if (!key) return;
+        var candidate = toText(preferred || name);
+        if (!candidate) return;
+        if (!map[key]) {
+          map[key] = candidate;
+          return;
+        }
+        var current = map[key];
+        if (current === current.toLowerCase() && candidate !== candidate.toLowerCase()) {
+          map[key] = candidate;
+        }
+      }
+
+      function getBucket(name) {
+        var key = bucketKey(name);
+        if (!key) return { name: '', days: 0, team: '', waveDate: '' };
+        if (!buckets[key]) buckets[key] = { name: name, days: 0, team: '', waveDate: '' };
+        if (!buckets[key].name) buckets[key].name = name;
+        buckets[key].days = Number(buckets[key].days) || 0;
+        buckets[key].team = normalizeTeam(buckets[key].team);
+        buckets[key].waveDate = normalizeWaveDate(buckets[key].waveDate) || teamWaveDate(buckets[key].team);
+        return buckets[key];
+      }
+
+      function employeeSourceBucketInfo(name) {
+        var targetKey = bucketKey(name);
+        var exactRows = rows.filter(function (row) {
+          return bucketKey(row.name) === targetKey || bucketKey(row.originalName) === targetKey;
+        });
+        for (var i = 0; i < exactRows.length; i += 1) {
+          var rowTeam = normalizeTeam(exactRows[i].team);
+          var rowWaveDate = normalizeWaveDate(exactRows[i].waveDate);
+          if (rowTeam || rowWaveDate) {
+            return {
+              team: rowTeam || teamFromWaveDate(rowWaveDate),
+              waveDate: rowTeam ? teamWaveDate(rowTeam) : rowWaveDate
+            };
+          }
+        }
+        for (var j = 0; j < exactRows.length; j += 1) {
+          var inferred = inferTeam(exactRows[j].sourceFile, exactRows[j].sourceSheet);
+          if (inferred) {
+            return {
+              team: inferred,
+              waveDate: teamWaveDate(inferred)
+            };
+          }
+        }
+        return { team: '', waveDate: '' };
+      }
+
+      function employeeBucketInfo(name) {
+        var bucket = getBucket(name);
+        var source = employeeSourceBucketInfo(name);
+        var team = normalizeTeam(bucket.team) || source.team;
+        var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(bucket.waveDate) || source.waveDate;
+        if (!team) team = teamFromWaveDate(waveDate);
+        if (!waveDate) waveDate = teamWaveDate(team);
+        var accrual = calculateBucketAccrual(waveDate);
+        var legacyDays = Number(bucket.days) || 0;
+        var totalDays = accrual.hasWaveDate ? accrual.totalDays : legacyDays;
+        return {
+          name: name,
+          team: team,
+          teamLabel: teamLabel(team),
+          waveDate: normalizeWaveDate(waveDate),
+          waveDateLabel: formatWaveDate(waveDate),
+          ptoDays: accrual.ptoDays,
+          atoDays: accrual.atoDays,
+          totalDays: totalDays,
+          legacyDays: legacyDays,
+          hasWaveDate: accrual.hasWaveDate
+        };
+      }
+
+      function bucketDays(name) {
+        return employeeBucketInfo(name).totalDays;
+      }
+
+      function setBucketDays(name, value) {
+        var parsed = Number(String(value == null ? '' : value).trim());
+        if (!Number.isFinite(parsed) || parsed < 0) parsed = 0;
+        var bucket = getBucket(name);
+        bucket.name = name;
+        bucket.days = parsed;
+        saveBucketData();
+      }
+
+      function getCapSetting(name) {
+        var key = capKey(name);
+        if (!key) return { issueDate: '', neededNote: '' };
+        if (!capSettings[key]) capSettings[key] = { name: name, issueDate: '', neededNote: '' };
+        if (!capSettings[key].name) capSettings[key].name = name;
+        capSettings[key].issueDate = normalizeWaveDate(capSettings[key].issueDate);
+        capSettings[key].neededNote = toText(capSettings[key].neededNote);
+        return capSettings[key];
+      }
+
+      function capLevelForPoints(points) {
+        var value = Number(points) || 0;
+        for (var i = 0; i < CAP_LEVELS.length; i += 1) {
+          if (value >= CAP_LEVELS[i].min) return CAP_LEVELS[i];
+        }
+        return { label: '', min: 0, className: '', duration: '' };
+      }
+
+      function nextCapLevelForPoints(points) {
+        var value = Number(points) || 0;
+        var ascending = CAP_LEVELS.slice().sort(function (a, b) {
+          return a.min - b.min;
+        });
+        for (var i = 0; i < ascending.length; i += 1) {
+          if (value < ascending[i].min) return ascending[i];
+        }
+        return null;
+      }
+
+      function autoCapNeededNote(points) {
+        var nextLevel = nextCapLevelForPoints(points + 1);
+        if (!nextLevel) return '';
+        if (nextLevel.label === 'Final') return 'Next occurrence Final';
+        if (nextLevel.label === 'Written') return 'Next full occurrence Written';
+        if (nextLevel.label === 'Termination') return 'Next occurrence Termination';
+        return '';
+      }
+
+      function latestPointDate(employeeName) {
+        var key = capKey(employeeName);
+        var latest = null;
+        rows.forEach(function (row) {
+          if (capKey(row.name) !== key && capKey(row.originalName) !== key) return;
+          if ((Number(row.points) || 0) <= 0) return;
+          if (!(row.date instanceof Date) || isNaN(row.date)) return;
+          if (!latest || row.date.getTime() > latest.getTime()) latest = row.date;
+        });
+        return latest ? dateKey(latest) : '';
+      }
+
+      function supervisorForEmployee(name) {
+        var info = employeeBucketInfo(name);
+        var label = info.teamLabel || '';
+        if (!label) return '';
+        return label
+          .replace(/'s\s+team.*$/i, '')
+          .replace(/\s+team.*$/i, '')
+          .trim();
+      }
+
+      function setBucketTeam(name, value) {
+        var bucket = getBucket(name);
+        var team = normalizeTeam(value);
+        bucket.name = name;
+        bucket.team = team;
+        bucket.waveDate = teamWaveDate(team);
+        saveBucketData();
+      }
+
+      function moveBucketIfNeeded(previousName, nextName) {
+        var previousKey = bucketKey(previousName);
+        var nextKey = bucketKey(nextName);
+        if (!previousKey || !nextKey || previousKey === nextKey) return;
+        if (buckets[previousKey] && !buckets[nextKey]) {
+          buckets[nextKey] = buckets[previousKey];
+          buckets[nextKey].name = nextName;
+          delete buckets[previousKey];
+          saveBucketData();
+        }
+        if (capSettings[previousKey] && !capSettings[nextKey]) {
+          capSettings[nextKey] = capSettings[previousKey];
+          capSettings[nextKey].name = nextName;
+          delete capSettings[previousKey];
+          saveCapData();
+        }
+      }
+
+      function classify(date) {
+        if (!(date instanceof Date) || isNaN(date)) return 'future';
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var recordDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return recordDate < today ? 'past' : 'future';
+      }
+
+      function isRequestSource(row) {
+        var sourceText = norm([row && row.sourceFile, row && row.sourceSheet].filter(Boolean).join(' '));
+        return sourceText.indexOf('requested days off') !== -1 ||
+          sourceText.indexOf('time off request') !== -1 ||
+          sourceText.indexOf('future request') !== -1;
+      }
+
+      function defaultStatus(row) {
+        var dateStatus = classify(row && row.date);
+        if (isRequestSource(row)) return dateStatus === 'past' ? 'pastrequest' : 'future';
+        return dateStatus;
+      }
+
+      function isValidStatus(value) {
+        return STATUS_VALUES.indexOf(value) !== -1;
+      }
+
+      function normalizeStatusValue(value) {
+        if (isValidStatus(value)) return value;
+        var compact = norm(value).replace(/\s+/g, '');
+        if (compact === 'occurrence') return 'past';
+        if (compact === 'futurerequest') return 'future';
+        if (compact === 'pastrequest') return 'pastrequest';
+        return '';
+      }
+
+      function isValidFollowUp(value) {
+        return FOLLOW_UP_VALUES.indexOf(value) !== -1;
+      }
+
+      function normalizeFollowUp(value) {
+        if (isValidFollowUp(value)) return value;
+        var compact = norm(value).replace(/\s+/g, '');
+        if (compact === '30daygiveback' || compact === 'thirtydaygiveback' || compact === 'giveback30') return 'giveback30';
+        if (compact === 'dropoff' || compact === 'dropoffpending' || compact === 'policydropoff' || compact === 'policydropoffpending') return 'policyDropOffPending';
+        if (compact === 'cluster') return 'cluster';
+        return '';
+      }
+
+      function normalizeFlags(value) {
+        var source = Array.isArray(value) ? value : String(value == null ? '' : value).split(/[;,|]/);
+        var flags = [];
+        source.forEach(function (item) {
+          var normalized = normalizeFollowUp(item);
+          if (normalized && flags.indexOf(normalized) === -1) flags.push(normalized);
+        });
+        return flags;
+      }
+
+      function selectedFlags(inputs) {
+        return Array.from(inputs).filter(function (input) {
+          return input.checked;
+        }).map(function (input) {
+          return input.value;
+        }).filter(isValidFollowUp);
+      }
+
+      function setSelectedFlags(inputs, flags) {
+        var normalized = normalizeFlags(flags);
+        Array.from(inputs).forEach(function (input) {
+          input.checked = normalized.indexOf(input.value) !== -1;
+        });
+      }
+
+      function hasFlag(row, flag) {
+        return normalizeFlags(row.flags || row.followUp).indexOf(flag) !== -1;
+      }
+
+      function rowHighlightClass(row, baseClass) {
+        var classes = [];
+        if (baseClass) classes.push(baseClass);
+        if (row && row.bucketApplied) classes.push('bucket-row');
+        if (hasFlag(row || {}, 'policyDropOffPending')) classes.push('dropoff-row');
+        return classes.length ? ' class="' + escapeHtml(classes.join(' ')) + '"' : '';
+      }
+
+      function normalizeMonth(value) {
+        if (value instanceof Date && !isNaN(value)) return dateKey(value).slice(0, 7);
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          var parsedDate = parseDate(value);
+          return parsedDate ? dateKey(parsedDate).slice(0, 7) : '';
+        }
+        var text = toText(value);
+        var match = text.match(/^(\d{4})-(\d{2})/);
+        if (!match) {
+          var parsedTextDate = parseDate(text);
+          return parsedTextDate ? dateKey(parsedTextDate).slice(0, 7) : '';
+        }
+        var month = Number(match[2]);
+        if (month < 1 || month > 12) return '';
+        return match[1] + '-' + match[2];
+      }
+
+      function formatMonthLabel(value) {
+        var monthKey = normalizeMonth(value);
+        if (!monthKey) return '';
+        var parts = monthKey.split('-');
+        return new Date(Number(parts[0]), Number(parts[1]) - 1, 1).toLocaleDateString(undefined, {
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      function resolveType(row) {
+        if (isValidStatus(row.statusOverride)) return row.statusOverride;
+        return defaultStatus(row);
+      }
+
+      function isOccurrence(type) {
+        return type === 'past';
+      }
+
+      function countsAsOccurrence(row) {
+        return isOccurrence(row && row.type) && (Number(row.points) || 0) > 0;
+      }
+
+      function statusBadgeClass(type) {
+        return STATUS_CONFIG[type] ? STATUS_CONFIG[type].badge : STATUS_CONFIG.past.badge;
+      }
+
+      function statusLabel(type) {
+        return STATUS_CONFIG[type] ? STATUS_CONFIG[type].label : STATUS_CONFIG.past.label;
+      }
+
+      function followUpBadgeClass(value) {
+        return FOLLOW_UP_CONFIG[value] ? FOLLOW_UP_CONFIG[value].badge : '';
+      }
+
+      function followUpLabel(value, monthValue) {
+        if (Array.isArray(value)) {
+          return normalizeFlags(value).map(function (flag) {
+            return followUpLabel(flag, monthValue);
+          }).join(', ');
+        }
+        var label = FOLLOW_UP_CONFIG[value] ? FOLLOW_UP_CONFIG[value].label : '';
+        var monthLabel = value === 'giveback30' ? formatMonthLabel(monthValue) : '';
+        return label && monthLabel ? label + ' for ' + monthLabel : label;
+      }
+
+      function followUpBadge(value, monthValue) {
+        var flags = normalizeFlags(value);
+        return flags.map(function (flag) {
+          return '<span class="badge ' + escapeHtml(followUpBadgeClass(flag)) + '">' + escapeHtml(followUpLabel(flag, monthValue)) + '</span>';
+        }).join(' ');
+      }
+
+      function dateKey(date) {
+        if (!(date instanceof Date) || isNaN(date)) return '';
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return date.getFullYear() + '-' + month + '-' + day;
+      }
+
+      function createId() {
+        return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+      }
+
+      function normalizeRecord(raw) {
+        var date = parseDate(raw.dateIso || raw.date);
+        var originalName = toText(raw.originalName || raw.name);
+        var currentName = toText(raw.name || originalName);
+        var originalPoints = Number.isFinite(Number(raw.originalPoints)) ? Number(raw.originalPoints) : parsePoints(raw.originalPoints);
+        var currentPoints = Number.isFinite(Number(raw.points)) ? Number(raw.points) : parsePoints(raw.points);
+        var flags = normalizeFlags(raw.flags || raw.flag || raw.followUp || raw.followUpStatus || raw.followUpCategory || raw.policyStatus);
+        if (!flags.length) flags = normalizeFlags([raw.statusOverride, raw.type]);
+        var followUpMonth = flags.indexOf('giveback30') !== -1 ? normalizeMonth(raw.followUpMonth || raw.flagMonth || raw.giveBackMonth) : '';
+        var sourceFile = toText(raw.sourceFile);
+        var sourceSheet = toText(raw.sourceSheet);
+        var code = toText(raw.code);
+        var reason = toText(raw.reason);
+        var team = normalizeTeam(raw.team || raw.teamName || raw.waveTeam) || inferTeam(raw.sourceFile, raw.sourceSheet);
+        var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(raw.waveDate);
+        var statusBasis = {
+          sourceFile: sourceFile,
+          sourceSheet: sourceSheet,
+          code: code,
+          reason: reason,
+          date: date
+        };
+        var automaticStatus = defaultStatus(statusBasis);
+        var statusOverride = '';
+        var savedStatusOverride = normalizeStatusValue(raw.statusOverride);
+        var savedType = normalizeStatusValue(raw.type);
+        if (savedStatusOverride) statusOverride = savedStatusOverride;
+        if (!statusOverride && savedType && savedType !== automaticStatus && !(isRequestSource(statusBasis) && savedType === classify(date))) statusOverride = savedType;
+
+        return {
+          id: raw.id || createId(),
+          sourceFile: sourceFile,
+          sourceSheet: sourceSheet,
+          name: currentName,
+          originalName: originalName,
+          displayName: currentName,
+          editedEmployee: Boolean(raw.editedEmployee && currentName !== originalName),
+          team: team,
+          waveDate: waveDate,
+          date: date,
+          dateText: date ? formatDate(date) : toText(raw.dateText),
+          code: code,
+          reason: reason,
+          startTime: toText(raw.startTime),
+          endTime: toText(raw.endTime),
+          points: currentPoints,
+          originalPoints: originalPoints,
+          editedPoints: Boolean(raw.editedPoints && currentPoints !== originalPoints),
+          statusOverride: statusOverride,
+          flags: flags,
+          followUp: flags[0] || '',
+          followUpMonth: followUpMonth,
+          bucketApplied: Boolean(raw.bucketApplied),
+          type: statusOverride || automaticStatus
+        };
+      }
+
+      function sheetToRecords(sheet, fileName, sheetName) {
+        var matrix = XLSX.utils.sheet_to_json(sheet, {
+          header: 1,
+          raw: true,
+          defval: ''
+        });
+        var detection = detectHeaderRow(matrix);
+        var headerRow = matrix[detection.index] || [];
+        var columnMap = buildColumnMap(headerRow);
+        var records = [];
+
+        for (var r = detection.index + 1; r < matrix.length; r += 1) {
+          var sourceRow = matrix[r] || [];
+          if (sourceRow.every(isBlank)) continue;
+
+          var rawValues = {};
+          fields.forEach(function (field) {
+            rawValues[field] = getMappedValue(sourceRow, columnMap, field);
+          });
+
+          var hasAnyMappedValue = ['name', 'date', 'code', 'reason', 'startTime', 'endTime', 'points', 'followUp', 'followUpMonth'].some(function (field) {
+            return !isBlank(rawValues[field]);
+          });
+          if (!hasAnyMappedValue) continue;
+
+          var parsedDate = parseDate(rawValues.date);
+          var name = toText(rawValues.name);
+          var originalPoints = parsePoints(rawValues.points);
+          var team = normalizeTeam(rawValues.team) || inferTeam(fileName, sheetName);
+          var waveDate = team ? teamWaveDate(team) : normalizeWaveDate(rawValues.waveDate);
+
+          records.push({
+            id: createId(),
+            sourceFile: fileName,
+            sourceSheet: sheetName,
+            name: name,
+            originalName: name,
+            displayName: name,
+            editedEmployee: false,
+            team: team,
+            waveDate: waveDate,
+            date: parsedDate,
+            dateText: parsedDate ? formatDate(parsedDate) : toText(rawValues.date),
+            code: toText(rawValues.code),
+            reason: toText(rawValues.reason),
+            startTime: formatTime(rawValues.startTime),
+            endTime: formatTime(rawValues.endTime),
+            points: originalPoints,
+            originalPoints: originalPoints,
+            editedPoints: false,
+            statusOverride: '',
+            flags: normalizeFlags(rawValues.followUp),
+            followUp: normalizeFlags(rawValues.followUp)[0] || '',
+            followUpMonth: normalizeMonth(rawValues.followUpMonth),
+            bucketApplied: false,
+            type: defaultStatus({
+              sourceFile: fileName,
+              sourceSheet: sheetName,
+              code: rawValues.code,
+              reason: rawValues.reason,
+              date: parsedDate
+            })
+          });
+        }
+
+        return {
+          records: records,
+          headerRow: detection.index + 1,
+          score: detection.score
+        };
+      }
+
+      function makeKey(row) {
+        return [
+          norm(row.name),
+          dateKey(row.date) || norm(row.dateText),
+          norm(row.code),
+          norm(row.reason),
+          norm(row.startTime),
+          norm(row.endTime),
+          String(Number(row.points) || 0)
+        ].join('|');
+      }
+
+      function removeDuplicates(showAlert) {
+        var seen = new Set();
+        var unique = [];
+        var removed = 0;
+
+        rows.forEach(function (row) {
+          var key = makeKey(row);
+          if (seen.has(key)) {
+            removed += 1;
+          } else {
+            seen.add(key);
+            unique.push(row);
+          }
+        });
+
+        rows = unique;
+        if (removed > 0) saveData();
+        render();
+
+        if (showAlert) {
+          alert(removed ? 'Removed ' + removed + ' duplicate record' + (removed === 1 ? '.' : 's.') : 'No duplicate records were found.');
+        }
+
+        return removed;
+      }
+
+      function saveData(options) {
+        var serializable = rows.map(function (row) {
+          return {
+            id: row.id,
+            sourceFile: row.sourceFile,
+            sourceSheet: row.sourceSheet,
+            name: row.name,
+            originalName: row.originalName,
+            displayName: row.displayName,
+            editedEmployee: row.editedEmployee,
+            team: normalizeTeam(row.team),
+            waveDate: normalizeWaveDate(row.waveDate),
+            dateIso: row.date instanceof Date && !isNaN(row.date) ? row.date.toISOString() : '',
+            dateText: row.dateText,
+            code: row.code,
+            reason: row.reason,
+            startTime: row.startTime,
+            endTime: row.endTime,
+            points: row.points,
+            originalPoints: row.originalPoints,
+            editedPoints: row.editedPoints,
+            statusOverride: row.statusOverride || '',
+            flags: normalizeFlags(row.flags || row.followUp),
+            followUp: normalizeFlags(row.flags || row.followUp)[0] || '',
+            followUpMonth: row.followUpMonth || '',
+            bucketApplied: Boolean(row.bucketApplied),
+            type: row.type
+          };
+        });
+
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
+        } catch (error) {
+          alert('Unable to save data in this browser. The table is still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function saveBucketData(options) {
+        try {
+          localStorage.setItem(BUCKET_STORAGE_KEY, JSON.stringify(buckets));
+        } catch (error) {
+          alert('Unable to save bucket data in this browser. The bucket changes are still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function applyTeamConfig(source) {
+        var next = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+        Object.keys(source || {}).forEach(function (key) {
+          var label = toText(source[key] && source[key].label);
+          var waveDate = normalizeWaveDate(source[key] && source[key].waveDate);
+          if (!key || !label || !waveDate) return;
+          next[key] = {
+            label: label,
+            waveDate: waveDate
+          };
+        });
+        TEAM_CONFIG = next;
+      }
+
+      function saveTeamData(options) {
+        try {
+          localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(TEAM_CONFIG));
+        } catch (error) {
+          alert('Unable to save wave teams in this browser. The changes are still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function loadTeamData() {
+        var saved = localStorage.getItem(TEAM_STORAGE_KEY);
+        if (!saved) {
+          TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          applyTeamConfig(parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {});
+        } catch (error) {
+          TEAM_CONFIG = cloneTeamConfig(DEFAULT_TEAM_CONFIG);
+        }
+      }
+
+      function saveCapData(options) {
+        try {
+          localStorage.setItem(CAP_STORAGE_KEY, JSON.stringify(capSettings));
+        } catch (error) {
+          alert('Unable to save CAP settings in this browser. The changes are still available for this session.');
+        }
+
+        if (!options || !options.skipCloudSync) queueCloudSync();
+      }
+
+      function loadCapData() {
+        var saved = localStorage.getItem(CAP_STORAGE_KEY);
+        if (!saved) {
+          capSettings = {};
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          capSettings = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+          Object.keys(capSettings).forEach(function (key) {
+            capSettings[key] = {
+              name: toText(capSettings[key].name),
+              issueDate: normalizeWaveDate(capSettings[key].issueDate),
+              neededNote: toText(capSettings[key].neededNote)
+            };
+          });
+        } catch (error) {
+          capSettings = {};
+        }
+      }
+
+      function showWaveTeamStatus(message) {
+        els.waveTeamStatus.textContent = message;
+        setTimeout(function () {
+          if (els.waveTeamStatus.textContent === message) els.waveTeamStatus.textContent = '';
+        }, 3000);
+      }
+
+      function resetWaveTeamForm() {
+        els.waveTeamKey.value = '';
+        els.waveTeamName.value = '';
+        els.waveTeamDate.value = '';
+        els.saveWaveTeamBtn.textContent = 'Save Team';
+      }
+
+      function renderWaveTeams() {
+        refreshTeamSelectOptions();
+        els.waveTeamsBody.innerHTML = teamValues().map(function (key) {
+          var team = TEAM_CONFIG[key];
+          return '<tr>' +
+            '<td>' + escapeHtml(team.label) + '</td>' +
+            '<td>' + escapeHtml(formatWaveDate(team.waveDate)) + '</td>' +
+            '<td><button class="small secondary" type="button" data-team-action="edit" data-team-key="' + escapeHtml(key) + '">Edit</button></td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      function saveWaveTeam(event) {
+        event.preventDefault();
+        var key = els.waveTeamKey.value || makeTeamKey(els.waveTeamName.value);
+        var label = toText(els.waveTeamName.value);
+        var waveDate = normalizeWaveDate(els.waveTeamDate.value);
+
+        if (!label) {
+          alert('Team name is required.');
+          els.waveTeamName.focus();
+          return;
+        }
+
+        if (!waveDate) {
+          alert('Wave date is required.');
+          els.waveTeamDate.focus();
+          return;
+        }
+
+        TEAM_CONFIG[key] = {
+          label: label,
+          waveDate: waveDate
+        };
+        saveTeamData();
+        resetWaveTeamForm();
+        render();
+        showWaveTeamStatus('Wave team saved.');
+      }
+
+      function editWaveTeam(key) {
+        var normalizedKey = normalizeTeam(key);
+        if (!normalizedKey || !TEAM_CONFIG[normalizedKey]) return;
+        els.waveTeamKey.value = normalizedKey;
+        els.waveTeamName.value = TEAM_CONFIG[normalizedKey].label;
+        els.waveTeamDate.value = TEAM_CONFIG[normalizedKey].waveDate;
+        els.saveWaveTeamBtn.textContent = 'Update Team';
+        els.waveTeamName.focus();
+      }
+
+      function loadBucketData() {
+        var saved = localStorage.getItem(BUCKET_STORAGE_KEY);
+        if (!saved) {
+          buckets = {};
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          buckets = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+          Object.keys(buckets).forEach(function (key) {
+            var team = normalizeTeam(buckets[key].team);
+            buckets[key] = {
+              name: toText(buckets[key].name),
+              days: Number(buckets[key].days) || 0,
+              team: team,
+              waveDate: normalizeWaveDate(buckets[key].waveDate) || teamWaveDate(team)
+            };
+          });
+        } catch (error) {
+          buckets = {};
+        }
+      }
+
+      function loadSavedData() {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) {
+          rows = [];
+          return;
+        }
+
+        try {
+          var parsed = JSON.parse(saved);
+          rows = Array.isArray(parsed) ? parsed.map(normalizeRecord) : [];
+        } catch (error) {
+          rows = [];
+          alert('Saved attendance data could not be loaded. The saved copy may be damaged.');
+        }
+      }
+
+      function parseSpreadsheetId(value) {
+        var text = toText(value);
+        if (!text) return '';
+        var match = text.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/i);
+        return match ? match[1] : text;
+      }
+
+      function getCloudRedirectUri() {
+        return window.location.origin + window.location.pathname;
+      }
+
+      function getCloudOrigin() {
+        return window.location.origin;
+      }
+
+      function renderCloudOAuthValues() {
+        els.cloudOriginValue.value = getCloudOrigin();
+        els.cloudRedirectValue.value = getCloudRedirectUri();
+        els.cloudAuthUrlValue.value = buildCloudAuthUrl('preview');
+      }
+
+      async function copyCloudValue(input) {
+        var value = input.value;
+        if (!value) return;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(value);
+          } else {
+            input.focus();
+            input.select();
+            document.execCommand('copy');
+          }
+          renderCloudStatus('Copied OAuth setup value.');
+        } catch (error) {
+          input.focus();
+          input.select();
+          renderCloudStatus('Copy failed. Select the value and copy it manually.');
+        }
+      }
+
+      function buildCloudAuthUrl(state) {
+        var params = new URLSearchParams({
+          client_id: cloudConfig.clientId || '[OAuth Client ID]',
+          redirect_uri: getCloudRedirectUri(),
+          response_type: 'token',
+          scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file',
+          include_granted_scopes: 'true',
+          state: state || 'preview',
+          prompt: 'consent'
+        });
+
+        return 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+      }
+
+      function clearUrlHash() {
+        if (!window.location.hash) return;
+        var cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+
+      function beginCloudRedirectAuth() {
+        saveCloudConfig();
+        if (!cloudConfig.clientId) throw new Error('Set Google OAuth Client ID first.');
+
+        var state = 'cloud_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        try {
+          sessionStorage.setItem(CLOUD_AUTH_STATE_KEY, state);
+        } catch (error) {
+          throw new Error('Could not store cloud auth state in this browser.');
+        }
+
+        window.location.assign(buildCloudAuthUrl(state));
+      }
+
+      function consumeCloudRedirectResponse() {
+        var hash = toText(window.location.hash).replace(/^#/, '');
+        if (!hash) return '';
+        if (hash.indexOf('access_token=') === -1 && hash.indexOf('error=') === -1) return '';
+
+        var params = new URLSearchParams(hash);
+        var expectedState = '';
+        try {
+          expectedState = toText(sessionStorage.getItem(CLOUD_AUTH_STATE_KEY));
+          sessionStorage.removeItem(CLOUD_AUTH_STATE_KEY);
+        } catch (error) {
+          expectedState = '';
+        }
+
+        clearUrlHash();
+
+        var returnedState = toText(params.get('state'));
+        if (expectedState && returnedState && expectedState !== returnedState) {
+          return 'Cloud auth failed: state mismatch.';
+        }
+
+        var authError = toText(params.get('error'));
+        if (authError) {
+          var description = toText(params.get('error_description'));
+          return 'Cloud auth failed: ' + authError + (description ? ' (' + description + ')' : '');
+        }
+
+        var token = toText(params.get('access_token'));
+        if (!token) return 'Cloud auth failed: no access token returned.';
+
+        cloudAccessToken = token;
+        cloudTokenExpiresAt = Date.now() + ((Number(params.get('expires_in')) || 0) * 1000);
+        saveCloudToken();
+        if (cloudConfig.autoSync) queueCloudSync();
+        return 'Cloud auth connected and saved on this device (redirect).';
+      }
+
+      function clearCloudToken() {
+        cloudAccessToken = '';
+        cloudTokenExpiresAt = 0;
+        try {
+          localStorage.removeItem(CLOUD_TOKEN_KEY);
+        } catch (error) {
+          // Keep runtime token state cleared even if localStorage access fails.
+        }
+      }
+
+      function saveCloudToken() {
+        if (!cloudAccessToken || !cloudTokenExpiresAt || Date.now() >= cloudTokenExpiresAt) {
+          clearCloudToken();
+          return;
+        }
+
+        try {
+          localStorage.setItem(CLOUD_TOKEN_KEY, JSON.stringify({
+            accessToken: cloudAccessToken,
+            expiresAt: cloudTokenExpiresAt
+          }));
+        } catch (error) {
+          // Token persistence is optional. Keep in-memory token even if save fails.
+        }
+      }
+
+      function loadCloudToken() {
+        var saved = '';
+        try {
+          saved = localStorage.getItem(CLOUD_TOKEN_KEY);
+        } catch (error) {
+          return false;
+        }
+        if (!saved) return false;
+        try {
+          var parsed = JSON.parse(saved);
+          var token = toText(parsed && parsed.accessToken);
+          var expiresAt = Number(parsed && parsed.expiresAt) || 0;
+          if (!token || !expiresAt || Date.now() >= (expiresAt - 30000)) {
+            clearCloudToken();
+            return false;
+          }
+          cloudAccessToken = token;
+          cloudTokenExpiresAt = expiresAt;
+          return true;
+        } catch (error) {
+          clearCloudToken();
+          return false;
+        }
+      }
+
+      function saveCloudConfig() {
+        cloudConfig.clientId = toText(els.cloudClientIdInput.value);
+        cloudConfig.spreadsheetId = parseSpreadsheetId(els.cloudSheetIdInput.value);
+        els.cloudSheetIdInput.value = cloudConfig.spreadsheetId;
+        cloudConfig.autoSync = Boolean(els.cloudAutoSyncToggle.checked);
+        try {
+          localStorage.setItem(CLOUD_CONFIG_KEY, JSON.stringify(cloudConfig));
+        } catch (error) {
+          alert('Unable to save cloud settings in this browser.');
+        }
+      }
+
+      function loadCloudConfig() {
+        var saved = localStorage.getItem(CLOUD_CONFIG_KEY);
+        if (!saved) return;
+        try {
+          var parsed = JSON.parse(saved);
+          if (!parsed || typeof parsed !== 'object') return;
+          cloudConfig.clientId = toText(parsed.clientId);
+          cloudConfig.spreadsheetId = toText(parsed.spreadsheetId) || TEAM_REFERENCE_SPREADSHEET_ID;
+          cloudConfig.autoSync = Boolean(parsed.autoSync);
+        } catch (error) {
+          cloudConfig = { clientId: '', spreadsheetId: TEAM_REFERENCE_SPREADSHEET_ID, autoSync: false };
+        }
+      }
+
+      function renderCloudStatus(message) {
+        if (message) {
+          els.cloudStatus.textContent = message;
+          return;
+        }
+
+        var tokenActive = Boolean(cloudAccessToken) && Date.now() < (cloudTokenExpiresAt - 30000);
+
+        if (!cloudConfig.clientId) {
+          els.cloudStatus.textContent = 'Add OAuth Client ID to enable Google Sheets cloud storage.';
+          return;
+        }
+
+        if (!cloudConfig.spreadsheetId) {
+          els.cloudStatus.textContent = 'Connected config ready. Create a sheet or paste a Spreadsheet ID.';
+          return;
+        }
+
+        els.cloudStatus.textContent = 'Cloud sheet configured: ' + cloudConfig.spreadsheetId +
+          (cloudConfig.autoSync ? ' (auto-sync on)' : ' (manual sync)') +
+          (tokenActive ? ' | signed in' : ' | sign-in required');
+      }
+
+      function shortCloudError(error) {
+        var text = (error && error.message ? String(error.message) : 'Unknown cloud error').replace(/\s+/g, ' ').trim();
+        if (text.length <= 170) return text;
+        return text.slice(0, 167) + '...';
+      }
+
+      function queueCloudSync() {
+        if (!cloudConfig.autoSync || suppressCloudSync) return;
+        if (!cloudConfig.clientId || !cloudConfig.spreadsheetId) return;
+        if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
+
+        cloudSyncTimer = setTimeout(async function () {
+          if (cloudSyncInFlight) return;
+          cloudSyncInFlight = true;
+          try {
+            await cloudPushAll({ silent: true, interactive: false });
+            renderCloudStatus('Auto-synced to cloud at ' + new Date().toLocaleTimeString());
+          } catch (error) {
+            renderCloudStatus('Auto-sync paused: ' + shortCloudError(error));
+          } finally {
+            cloudSyncInFlight = false;
+          }
+        }, 500);
+      }
+
+      function initCloudAuthClient() {
+        if (!window.google || !google.accounts || !google.accounts.oauth2) {
+          throw new Error('Google Identity script did not load.');
+        }
+        cloudTokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: cloudConfig.clientId,
+          scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file',
+          error_callback: function (error) {
+            var errorType = (error && error.type) ? error.type : 'popup_failed';
+            if (cloudTokenErrorTimer) clearTimeout(cloudTokenErrorTimer);
+            cloudTokenErrorTimer = setTimeout(function () {
+              clearCloudToken();
+              if (cloudTokenPendingReject) cloudTokenPendingReject(new Error(errorType));
+              cloudTokenPendingResolve = null;
+              cloudTokenPendingReject = null;
+              cloudTokenErrorTimer = null;
+            }, 2500);
+          },
+          callback: function (tokenResponse) {
+            if (cloudTokenErrorTimer) {
+              clearTimeout(cloudTokenErrorTimer);
+              cloudTokenErrorTimer = null;
+            }
+            if (tokenResponse.error) {
+              clearCloudToken();
+              if (cloudTokenPendingReject) cloudTokenPendingReject(new Error(tokenResponse.error));
+            } else {
+              cloudAccessToken = tokenResponse.access_token;
+              cloudTokenExpiresAt = Date.now() + ((Number(tokenResponse.expires_in) || 0) * 1000);
+              saveCloudToken();
+              if (cloudTokenPendingResolve) cloudTokenPendingResolve(cloudAccessToken);
+            }
+            cloudTokenPendingResolve = null;
+            cloudTokenPendingReject = null;
+          }
+        });
+      }
+
+      function requestCloudToken(promptMode, interactive) {
+        return new Promise(function (resolve, reject) {
+          if (!cloudConfig.clientId) {
+            reject(new Error('Set Google OAuth Client ID first.'));
+            return;
+          }
+
+          if (cloudAccessToken && Date.now() < (cloudTokenExpiresAt - 60000) && promptMode !== 'consent') {
+            resolve(cloudAccessToken);
+            return;
+          }
+
+          if (interactive === false) {
+            reject(new Error('Cloud token is missing or expired. Click Connect to refresh.'));
+            return;
+          }
+
+          try {
+            if (!cloudTokenClient) initCloudAuthClient();
+            if (cloudTokenErrorTimer) {
+              clearTimeout(cloudTokenErrorTimer);
+              cloudTokenErrorTimer = null;
+            }
+            cloudTokenPendingResolve = resolve;
+            cloudTokenPendingReject = reject;
+            cloudTokenClient.requestAccessToken({ prompt: promptMode || '' });
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+
+      async function cloudFetch(url, options, authOptions) {
+        var settings = authOptions || {};
+        var token = await requestCloudToken(settings.promptMode || '', settings.interactive !== false);
+        var request = options || {};
+        var headers = request.headers || {};
+        headers.Authorization = 'Bearer ' + token;
+        request.headers = headers;
+        var response = await fetch(url, request);
+        if (response.status === 401 || response.status === 403) {
+          clearCloudToken();
+        }
+        if (!response.ok) {
+          var text = await response.text();
+          throw new Error('Cloud request failed: ' + response.status + ' ' + text);
+        }
+        return response;
+      }
+
+      function cloudRecordRows() {
+        var headers = [
+          'id', 'sourceFile', 'sourceSheet', 'name', 'originalName', 'displayName', 'editedEmployee',
+          'team', 'waveDate', 'dateIso', 'dateText', 'code', 'reason', 'startTime', 'endTime', 'points',
+          'originalPoints', 'editedPoints', 'statusOverride', 'flags', 'followUpMonth', 'bucketApplied', 'type'
+        ];
+        var values = [headers];
+        rows.forEach(function (row) {
+          var bucketInfo = employeeBucketInfo(row.name);
+          var rowTeam = normalizeTeam(row.team) || bucketInfo.team;
+          var rowWaveDate = rowTeam ? teamWaveDate(rowTeam) : normalizeWaveDate(row.waveDate) || bucketInfo.waveDate;
+          values.push([
+            row.id,
+            row.sourceFile,
+            row.sourceSheet,
+            row.name,
+            row.originalName,
+            row.displayName,
+            row.editedEmployee ? 'true' : 'false',
+            teamLabel(rowTeam) || rowTeam,
+            rowWaveDate,
+            row.date instanceof Date && !isNaN(row.date) ? row.date.toISOString() : '',
+            row.dateText || '',
+            row.code,
+            row.reason,
+            row.startTime,
+            row.endTime,
+            String(Number(row.points) || 0),
+            String(Number(row.originalPoints) || 0),
+            row.editedPoints ? 'true' : 'false',
+            row.statusOverride || '',
+            normalizeFlags(row.flags || row.followUp).join('|'),
+            row.followUpMonth || '',
+            row.bucketApplied ? 'true' : 'false',
+            row.type
+          ]);
+        });
+        return values;
+      }
+
+      function cloudBucketRows() {
+        var headers = ['rowType', 'key', 'name', 'team', 'waveDate', 'ptoDays', 'atoDays', 'totalBucketDays', 'bucketOccurrences', 'remainingDays', 'legacyApprovedDays', 'capIssueDate', 'capNeededNote'];
+        var values = [headers];
+        bucketEmployeeRows(rows).forEach(function (item) {
+          var cap = getCapSetting(item.name);
+          values.push([
+            'employee',
+            bucketKey(item.name),
+            item.name,
+            item.teamLabel || item.team,
+            item.waveDate,
+            String(item.ptoDays),
+            String(item.atoDays),
+            String(item.days),
+            String(item.assigned),
+            String(item.remaining),
+            String(item.legacyDays),
+            cap.issueDate || '',
+            cap.neededNote || ''
+          ]);
+        });
+        teamValues().forEach(function (key) {
+          values.push([
+            'team',
+            key,
+            TEAM_CONFIG[key].label,
+            key,
+            TEAM_CONFIG[key].waveDate,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+          ]);
+        });
+        return values;
+      }
+
+      function rowsFromCloud(values) {
+        if (!Array.isArray(values) || values.length < 2) return [];
+        var headers = values[0].map(function (value) { return toText(value); });
+        var index = {};
+        headers.forEach(function (name, idx) { index[name] = idx; });
+
+        return values.slice(1).filter(function (row) {
+          return Array.isArray(row) && row.some(function (cell) { return !isBlank(cell); });
+        }).map(function (row) {
+          function cell(name) {
+            return index[name] == null ? '' : row[index[name]];
+          }
+          return normalizeRecord({
+            id: cell('id'),
+            sourceFile: cell('sourceFile'),
+            sourceSheet: cell('sourceSheet'),
+            name: cell('name'),
+            originalName: cell('originalName'),
+            displayName: cell('displayName'),
+            editedEmployee: norm(cell('editedEmployee')) === 'true',
+            team: cell('team'),
+            waveDate: cell('waveDate'),
+            dateIso: cell('dateIso'),
+            dateText: cell('dateText'),
+            code: cell('code'),
+            reason: cell('reason'),
+            startTime: cell('startTime'),
+            endTime: cell('endTime'),
+            points: cell('points'),
+            originalPoints: cell('originalPoints'),
+            editedPoints: norm(cell('editedPoints')) === 'true',
+            statusOverride: cell('statusOverride'),
+            flags: normalizeFlags(cell('flags')),
+            followUpMonth: cell('followUpMonth'),
+            bucketApplied: norm(cell('bucketApplied')) === 'true',
+            type: cell('type')
+          });
+        });
+      }
+
+      function bucketsFromCloud(values) {
+        var next = {};
+        var teams = {};
+        var caps = {};
+        if (!Array.isArray(values) || values.length < 2) return { buckets: next, teams: teams, caps: caps };
+        var headers = values[0].map(function (value) { return toText(value); });
+        var index = {};
+        headers.forEach(function (name, idx) { index[name] = idx; });
+        values.slice(1).forEach(function (row) {
+          if (!Array.isArray(row) || !row.length) return;
+          function cell(name) {
+            return index[name] == null ? '' : row[index[name]];
+          }
+          var name = toText(cell('name'));
+          var key = index.key == null ? '' : toText(cell('key'));
+          if (!key && name) key = bucketKey(name);
+          if (!key) return;
+          var rowType = norm(cell('rowType'));
+          var waveDate = normalizeWaveDate(cell('waveDate'));
+          if (rowType === 'team') {
+            if (name && waveDate) teams[key] = { label: name, waveDate: waveDate };
+            return;
+          }
+          next[key] = {
+            name: name,
+            days: index.days == null ? Number(cell('legacyApprovedDays')) || Number(cell('totalBucketDays')) || 0 : Number(cell('days')) || 0,
+            team: toText(cell('team')),
+            waveDate: waveDate
+          };
+          var capIssueDate = normalizeWaveDate(cell('capIssueDate'));
+          var capNeededNote = toText(cell('capNeededNote'));
+          if (capIssueDate || capNeededNote) {
+            caps[key] = {
+              name: name,
+              issueDate: capIssueDate,
+              neededNote: capNeededNote
+            };
+          }
+        });
+        return { buckets: next, teams: teams, caps: caps };
+      }
+
+      async function cloudCreateSpreadsheet() {
+        saveCloudConfig();
+        var body = {
+          properties: { title: 'Attendance Tracker Cloud Data' },
+          sheets: [{ properties: { title: 'Records' } }, { properties: { title: 'Buckets' } }]
+        };
+        var response = await cloudFetch('https://sheets.googleapis.com/v4/spreadsheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }, { promptMode: '', interactive: true });
+        var created = await response.json();
+        cloudConfig.spreadsheetId = toText(created.spreadsheetId);
+        els.cloudSheetIdInput.value = cloudConfig.spreadsheetId;
+        saveCloudConfig();
+        renderCloudStatus('Created cloud sheet: ' + cloudConfig.spreadsheetId);
+      }
+
+      async function cloudPushAll(options) {
+        var settings = options || {};
+        saveCloudConfig();
+        if (!cloudConfig.spreadsheetId) throw new Error('Set Spreadsheet ID first.');
+        var payload = {
+          valueInputOption: 'RAW',
+          data: [
+            { range: 'Records!A1', majorDimension: 'ROWS', values: cloudRecordRows() },
+            { range: 'Buckets!A1', majorDimension: 'ROWS', values: cloudBucketRows() }
+          ]
+        };
+        await cloudFetch('https://sheets.googleapis.com/v4/spreadsheets/' + encodeURIComponent(cloudConfig.spreadsheetId) + '/values:batchUpdate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }, { promptMode: '', interactive: settings.interactive !== false });
+        if (!settings.silent) renderCloudStatus('Pushed local data to cloud sheet.');
+      }
+
+      async function cloudPullAll() {
+        saveCloudConfig();
+        if (!cloudConfig.spreadsheetId) throw new Error('Set Spreadsheet ID first.');
+        var response = await cloudFetch(
+          'https://sheets.googleapis.com/v4/spreadsheets/' + encodeURIComponent(cloudConfig.spreadsheetId) + '/values:batchGet?ranges=Records!A1:Z&ranges=Buckets!A1:Z',
+          null,
+          { promptMode: '', interactive: true }
+        );
+        var payload = await response.json();
+        var ranges = payload.valueRanges || [];
+        var recordsValues = ranges[0] && ranges[0].values ? ranges[0].values : [];
+        var bucketsValues = ranges[1] && ranges[1].values ? ranges[1].values : [];
+        suppressCloudSync = true;
+        try {
+          var cloudBuckets = bucketsFromCloud(bucketsValues);
+          if (Object.keys(cloudBuckets.teams).length) {
+            applyTeamConfig(cloudBuckets.teams);
+            saveTeamData({ skipCloudSync: true });
+          }
+          rows = rowsFromCloud(recordsValues);
+          buckets = cloudBuckets.buckets;
+          capSettings = cloudBuckets.caps || {};
+          Object.keys(buckets).forEach(function (key) {
+            var team = normalizeTeam(buckets[key].team);
+            buckets[key].team = team;
+            buckets[key].waveDate = team ? teamWaveDate(team) : normalizeWaveDate(buckets[key].waveDate);
+          });
+          saveData({ skipCloudSync: true });
+          saveBucketData({ skipCloudSync: true });
+          saveCapData({ skipCloudSync: true });
+        } finally {
+          suppressCloudSync = false;
+        }
+        render();
+        renderCloudStatus('Pulled cloud data into this browser.');
+      }
+
+      function clearSavedData() {
+        if (!confirm('Clear all saved attendance records from this browser?')) return;
+        rows = [];
+        buckets = {};
+        capSettings = {};
+        saveData();
+        saveBucketData();
+        saveCapData();
+        render();
+      }
+
+      async function handleCloudConnect() {
+        try {
+          saveCloudConfig();
+          await requestCloudToken('consent', true);
+          renderCloudStatus('Cloud auth connected and saved on this device.');
+          if (cloudConfig.autoSync) queueCloudSync();
+        } catch (error) {
+          var message = (error && error.message ? String(error.message) : '').toLowerCase();
+          if (message.indexOf('popup') !== -1) {
+            renderCloudStatus('Popup sign-in did not complete. Use Redirect Sign-In if needed.');
+            return;
+          }
+
+          renderCloudStatus('Cloud auth failed. Verify client ID, origins, and redirect URI.');
+          alert(error.message || 'Cloud auth failed.');
+        }
+      }
+
+      function handleCloudRedirectConnect() {
+        try {
+          beginCloudRedirectAuth();
+        } catch (error) {
+          renderCloudStatus('Redirect sign-in failed to start.');
+          alert(error.message || 'Redirect sign-in failed to start.');
+        }
+      }
+
+      async function handleCloudCreateSheet() {
+        try {
+          await cloudCreateSpreadsheet();
+        } catch (error) {
+          renderCloudStatus('Create sheet failed.');
+          alert(error.message || 'Create sheet failed.');
+        }
+      }
+
+      async function handleCloudPush() {
+        try {
+          await cloudPushAll();
+        } catch (error) {
+          renderCloudStatus('Cloud push failed.');
+          alert(error.message || 'Cloud push failed.');
+        }
+      }
+
+      async function handleCloudPull() {
+        try {
+          await cloudPullAll();
+        } catch (error) {
+          renderCloudStatus('Cloud pull failed.');
+          alert(error.message || 'Cloud pull failed.');
+        }
+      }
+
+      async function handleFileImport(event) {
+        if (!window.XLSX) {
+          alert('The XLSX library did not load. Check your internet connection and try again.');
+          return;
+        }
+
+        var files = Array.prototype.slice.call(event.target.files || []);
+        if (!files.length) return;
+
+        var summaries = [];
+        var importedCount = 0;
+
+        for (var i = 0; i < files.length; i += 1) {
+          var file = files[i];
+
+          try {
+            var buffer = await file.arrayBuffer();
+            var workbook = XLSX.read(buffer, {
+              type: 'array',
+              cellDates: true
+            });
+
+            workbook.SheetNames.forEach(function (sheetName) {
+              var result = sheetToRecords(workbook.Sheets[sheetName], file.name, sheetName);
+              rows = rows.concat(result.records);
+              importedCount += result.records.length;
+              summaries.push(file.name + ' / ' + sheetName + ': ' + result.records.length + ' record' + (result.records.length === 1 ? '' : 's') + ' added, header row ' + result.headerRow);
+            });
+          } catch (error) {
+            summaries.push(file.name + ': could not be imported (' + error.message + ')');
+          }
+        }
+
+        var duplicateCount = removeDuplicates(false);
+        saveData();
+        render();
+        event.target.value = '';
+
+        summaries.push('Total imported before duplicate removal: ' + importedCount);
+        summaries.push('Duplicates removed: ' + duplicateCount);
+        alert(summaries.join('\n'));
+      }
+
+      function showManualStatus(message) {
+        els.manualStatus.textContent = message;
+        if (manualStatusTimer) clearTimeout(manualStatusTimer);
+        manualStatusTimer = setTimeout(function () {
+          els.manualStatus.textContent = '';
+        }, 3500);
+      }
+
+      function resetManualForm() {
+        els.manualForm.reset();
+        els.manualPoints.value = '0';
+        els.manualStatusSelect.value = 'past';
+        els.manualTeam.value = '';
+        setSelectedFlags(els.manualFlagInputs, []);
+        els.manualFlagMonth.value = '';
+        updateManualFlagControls();
+      }
+
+      function addManualRecord(event) {
+        event.preventDefault();
+
+        var name = toText(els.manualName.value);
+        var date = parseDate(els.manualDate.value);
+        var points = Number(els.manualPoints.value);
+        var statusOverride = normalizeStatusValue(els.manualStatusSelect.value) || classify(date);
+        var flags = selectedFlags(els.manualFlagInputs);
+        var followUpMonth = flags.indexOf('giveback30') !== -1 ? normalizeMonth(els.manualFlagMonth.value) : '';
+        var team = normalizeTeam(els.manualTeam.value);
+        var waveDate = teamWaveDate(team);
+
+        if (!name) {
+          alert('Employee name is required.');
+          els.manualName.focus();
+          return;
+        }
+
+        if (!(date instanceof Date) || isNaN(date)) {
+          alert('A valid date is required.');
+          els.manualDate.focus();
+          return;
+        }
+
+        if (!Number.isFinite(points)) {
+          alert('Points must be a number.');
+          els.manualPoints.focus();
+          return;
+        }
+        if (flags.indexOf('giveback30') !== -1 && !followUpMonth) {
+          alert('Select a flag month for the 30 Day Give Back.');
+          els.manualFlagMonth.focus();
+          return;
+        }
+
+        rows.push({
+          id: createId(),
+          sourceFile: 'Manual Entry',
+          sourceSheet: 'Manual',
+          name: name,
+          originalName: name,
+          displayName: name,
+          editedEmployee: false,
+          team: team,
+          waveDate: waveDate,
+          date: date,
+          dateText: formatDate(date),
+          code: toText(els.manualCode.value),
+          reason: toText(els.manualReason.value),
+          startTime: formatTime(els.manualStartTime.value),
+          endTime: formatTime(els.manualEndTime.value),
+          points: points,
+          originalPoints: points,
+          editedPoints: false,
+          statusOverride: statusOverride,
+          flags: flags,
+          followUp: flags[0] || '',
+          followUpMonth: followUpMonth,
+          bucketApplied: false,
+          type: statusOverride || classify(date)
+        });
+
+        saveData();
+        resetManualForm();
+        render();
+        setView('records');
+        showManualStatus('Record added.');
+        els.manualName.focus();
+      }
+
+      function focusManualForm() {
+        els.manualName.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        els.manualName.focus();
+      }
+
+      function getFilterState() {
+        return {
+          search: norm(els.searchInput.value),
+          name: els.nameFilter.value,
+          code: els.codeFilter.value,
+          type: els.typeFilter.value,
+          followUp: els.followUpFilter.value
+        };
+      }
+
+      function filteredRows() {
+        var filters = getFilterState();
+
+        return rows.filter(function (row) {
+          var matchesSearch = !filters.search || [row.name, row.code, row.reason, statusLabel(row.type), followUpLabel(row.flags, row.followUpMonth)].some(function (value) {
+            return norm(value).indexOf(filters.search) !== -1;
+          });
+          var matchesName = !filters.name || row.name === filters.name;
+          var matchesCode = !filters.code || row.code === filters.code;
+          var matchesType = !filters.type || row.type === filters.type;
+          var matchesFollowUp = !filters.followUp || hasFlag(row, filters.followUp);
+          return matchesSearch && matchesName && matchesCode && matchesType && matchesFollowUp;
+        });
+      }
+
+      function sortRows(list) {
+        var sorted = list.slice();
+
+        sorted.sort(function (a, b) {
+          var result = 0;
+
+          if (sortKey === 'date') {
+            result = (a.date ? a.date.getTime() : 0) - (b.date ? b.date.getTime() : 0);
+          } else if (sortKey === 'points') {
+            result = Number(a.points || 0) - Number(b.points || 0);
+          } else if (sortKey === 'type') {
+            result = statusLabel(a.type).localeCompare(statusLabel(b.type));
+          } else if (sortKey === 'code') {
+            result = String(a.code || '').localeCompare(String(b.code || ''), undefined, { sensitivity: 'base' });
+          } else {
+            result = String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' });
+          }
+
+          if (result === 0) {
+            result = String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' });
+          }
+
+          return sortAsc ? result : -result;
+        });
+
+        return sorted;
+      }
+
+      function setSort(nextKey) {
+        if (sortKey === nextKey) {
+          sortAsc = !sortAsc;
+        } else {
+          sortKey = nextKey;
+          sortAsc = nextKey !== 'date' && nextKey !== 'points';
+        }
+
+        renderRecords();
+      }
+
+      function populateFilters() {
+        var currentName = els.nameFilter.value;
+        var currentCode = els.codeFilter.value;
+        var names = Array.from(new Set(rows.map(function (row) { return row.name; }).filter(Boolean))).sort(function (a, b) {
+          return a.localeCompare(b, undefined, { sensitivity: 'base' });
+        });
+        var codes = Array.from(new Set(rows.map(function (row) { return row.code; }).filter(Boolean))).sort(function (a, b) {
+          return a.localeCompare(b, undefined, { sensitivity: 'base' });
+        });
+
+        replaceOptions(els.nameFilter, 'All names', names, currentName);
+        replaceOptions(els.codeFilter, 'All codes', codes, currentCode);
+      }
+
+      function replaceOptions(select, emptyLabel, values, selectedValue) {
+        select.innerHTML = '';
+        select.appendChild(new Option(emptyLabel, ''));
+        values.forEach(function (value) {
+          select.appendChild(new Option(value, value));
+        });
+        select.value = values.indexOf(selectedValue) !== -1 ? selectedValue : '';
+      }
+
+      function clearFilters() {
+        els.searchInput.value = '';
+        els.nameFilter.value = '';
+        els.codeFilter.value = '';
+        els.typeFilter.value = '';
+        els.followUpFilter.value = '';
+        render();
+      }
+
+      function renderStats() {
+        var total = rows.length;
+        var past = rows.filter(countsAsOccurrence).length;
+        var future = rows.filter(function (row) { return row.type === 'future'; }).length;
+        var points = rows.reduce(function (sum, row) {
+          return sum + (Number(row.points) || 0);
+        }, 0);
+
+        els.statTotal.textContent = total.toLocaleString();
+        els.statPast.textContent = past.toLocaleString();
+        els.statFuture.textContent = future.toLocaleString();
+        els.statPoints.textContent = formatPoints(points);
+      }
+
+      function renderStatus(filteredCount) {
+        els.savedStatus.textContent = rows.length ? 'Saved in this browser: ' + rows.length.toLocaleString() + ' records' : 'No saved data loaded yet.';
+        els.filterStatus.textContent = 'Showing ' + filteredCount.toLocaleString() + ' of ' + rows.length.toLocaleString() + ' records';
+        els.exportBtn.disabled = rows.length === 0;
+        els.dedupeBtn.disabled = rows.length === 0;
+        renderCloudStatus();
+      }
+
+      function renderSortIndicators() {
+        var indicators = {
+          name: document.getElementById('sortName'),
+          date: document.getElementById('sortDate'),
+          type: document.getElementById('sortType'),
+          code: document.getElementById('sortCode'),
+          points: document.getElementById('sortPoints')
+        };
+
+        Object.keys(indicators).forEach(function (key) {
+          indicators[key].textContent = sortKey === key ? (sortAsc ? '^' : 'v') : '';
+        });
+      }
+
+      function renderRecords() {
+        var visibleRows = sortRows(filteredRows());
+        renderSortIndicators();
+
+        els.recordsBody.innerHTML = visibleRows.map(function (row) {
+          var pointText = escapeHtml(formatPoints(row.points)) + (row.editedPoints ? '<span class="edited">*</span>' : '');
+          var nameText = escapeHtml(row.name) + (row.editedEmployee ? ' <span class="edited">*</span>' : '');
+          var followUpText = followUpBadge(row.flags, row.followUpMonth) || '<span class="muted">None</span>';
+          if (row.bucketApplied) followUpText += ' <span class="badge bucket">Bucket</span>';
+          var nameButton = '<button class="name-button" type="button" data-action="view-employee" data-id="' + escapeHtml(row.id) + '">' + nameText + '</button>';
+          var resetName = row.editedEmployee ? '<button class="small secondary" type="button" data-action="reset-name" data-id="' + escapeHtml(row.id) + '">Reset Name</button>' : '';
+          var resetPoints = row.editedPoints ? '<button class="small secondary" type="button" data-action="reset-points" data-id="' + escapeHtml(row.id) + '">Reset Points</button>' : '';
+          var resetStatus = row.statusOverride ? '<button class="small secondary" type="button" data-action="reset-status" data-id="' + escapeHtml(row.id) + '">Reset Status</button>' : '';
+          var actionMenuId = escapeHtml(row.id);
+
+          return '<tr' + rowHighlightClass(row) + '>' +
+            '<td>' + nameButton + '</td>' +
+            '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
+            '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
+            '<td>' + followUpText + '</td>' +
+            '<td>' + escapeHtml(row.code) + '</td>' +
+            '<td>' + escapeHtml(row.reason) + '</td>' +
+            '<td>' + escapeHtml(row.startTime) + '</td>' +
+            '<td>' + escapeHtml(row.endTime) + '</td>' +
+            '<td>' + pointText + '</td>' +
+            '<td>' + escapeHtml(formatPoints(row.originalPoints)) + '</td>' +
+            '<td>' + escapeHtml(row.originalName) + '</td>' +
+            '<td><div class="actions">' +
+              '<button class="small secondary action-toggle" type="button" data-action-menu-toggle="' + actionMenuId + '" aria-expanded="false">Actions</button>' +
+              '<div class="action-list" data-action-menu="' + actionMenuId + '">' +
+                '<button class="small secondary" type="button" data-action="edit-name" data-id="' + actionMenuId + '">Edit Name</button>' +
+                resetName +
+                '<button class="small secondary" type="button" data-action="edit-occurrence" data-id="' + actionMenuId + '">Edit Occurrence</button>' +
+                '<button class="small secondary" type="button" data-action="edit-status" data-id="' + actionMenuId + '">Edit Status</button>' +
+                resetStatus +
+                '<button class="small secondary" type="button" data-action="edit-points" data-id="' + actionMenuId + '">Edit Points</button>' +
+                resetPoints +
+                '<button class="small danger" type="button" data-action="delete" data-id="' + actionMenuId + '">Delete</button>' +
+              '</div>' +
+            '</div></td>' +
+            '<td>' + escapeHtml(row.sourceFile) + '</td>' +
+          '</tr>';
+        }).join('');
+
+        els.recordsEmpty.classList.toggle('hidden', visibleRows.length !== 0);
+        els.recordsBody.querySelectorAll('button[data-action-menu-toggle]').forEach(function (button) {
+          button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            toggleActionMenu(button.getAttribute('data-action-menu-toggle'));
+          });
+        });
+        els.recordsBody.querySelectorAll('button[data-action]').forEach(function (button) {
+          button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            closeAllActionMenus();
+            handleRecordAction(button);
+          });
+        });
+      }
+
+      function renderSummary() {
+        var grouped = new Map();
+
+        filteredRows().forEach(function (row) {
+          var name = row.name || '(No Name)';
+          if (!grouped.has(name)) {
+            grouped.set(name, {
+              name: name,
+              total: 0,
+              past: 0,
+              pastRequest: 0,
+              future: 0,
+              points: 0
+            });
+          }
+
+          var item = grouped.get(name);
+          item.total += 1;
+          item.points += Number(row.points) || 0;
+          if (countsAsOccurrence(row)) item.past += 1;
+          if (row.type === 'pastrequest') item.pastRequest += 1;
+          if (row.type === 'future') item.future += 1;
+        });
+
+        var summary = Array.from(grouped.values()).sort(function (a, b) {
+          var pointSort = b.points - a.points;
+          return pointSort || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+        });
+
+        els.summaryBody.innerHTML = summary.map(function (item) {
+          var safeName = escapeHtml(item.name);
+          var openByNameBtn = '<button class="name-button" type="button" data-summary-action="view-employee" data-name="' + safeName + '">' + safeName + '</button>';
+          var openByTotalBtn = '<button class="name-button" type="button" data-summary-action="view-employee" data-name="' + safeName + '">' + item.total.toLocaleString() + '</button>';
+          return '<tr>' +
+            '<td>' + openByNameBtn + '</td>' +
+            '<td>' + openByTotalBtn + '</td>' +
+            '<td>' + item.past.toLocaleString() + '</td>' +
+            '<td>' + item.pastRequest.toLocaleString() + '</td>' +
+            '<td>' + item.future.toLocaleString() + '</td>' +
+            '<td>' + escapeHtml(formatPoints(item.points)) + '</td>' +
+          '</tr>';
+        }).join('');
+
+        els.summaryEmpty.classList.toggle('hidden', summary.length !== 0);
+        els.summaryBody.querySelectorAll('button[data-summary-action]').forEach(function (button) {
+          button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            handleSummaryAction(button);
+          });
+        });
+      }
+
+      function capEmployeeRows() {
+        var rowSource = filteredRows();
+        var namesByKey = {};
+        rowSource.forEach(function (row) {
+          rememberEmployeeName(namesByKey, row.name, preferredEmployeeDisplayName(row));
+        });
+        Object.keys(buckets).forEach(function (key) {
+          if (buckets[key] && buckets[key].name) rememberEmployeeName(namesByKey, buckets[key].name);
+        });
+        Object.keys(capSettings).forEach(function (key) {
+          if (capSettings[key] && capSettings[key].name) rememberEmployeeName(namesByKey, capSettings[key].name);
+        });
+
+        return Object.keys(namesByKey).map(function (key) {
+          var name = namesByKey[key];
+          var relatedRows = rowSource.filter(function (row) {
+            return capKey(row.name) === key || capKey(row.originalName) === key;
+          });
+          var totalPoints = relatedRows.reduce(function (sum, row) {
+            return sum + (Number(row.points) || 0);
+          }, 0);
+          var level = capLevelForPoints(totalPoints);
+          var setting = getCapSetting(name);
+          var issueDate = setting.issueDate || (level.label ? latestPointDate(name) : '');
+          var neededNote = setting.neededNote || autoCapNeededNote(totalPoints);
+          return {
+            key: key,
+            name: name,
+            supervisor: supervisorForEmployee(name),
+            totalPoints: totalPoints,
+            level: level,
+            issueDate: issueDate,
+            neededNote: neededNote
+          };
+        }).sort(function (a, b) {
+          var pointSort = b.totalPoints - a.totalPoints;
+          return pointSort || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+        });
+      }
+
+      function renderCap() {
+        var capRows = capEmployeeRows();
+        els.capBody.innerHTML = capRows.map(function (item) {
+          var safeName = escapeHtml(item.name);
+          var pointClass = item.level.className ? ' class="cap-scale-cell ' + escapeHtml(item.level.className) + '"' : '';
+          var issueValue = item.issueDate ? escapeHtml(item.issueDate) : '';
+          var noteValue = escapeHtml(item.neededNote);
+          return '<tr>' +
+            '<td><button class="name-button" type="button" data-cap-action="view-employee" data-name="' + safeName + '">' + safeName + '</button></td>' +
+            '<td>' + escapeHtml(item.supervisor) + '</td>' +
+            '<td' + pointClass + '>' + escapeHtml(formatPoints(item.totalPoints)) + '</td>' +
+            '<td' + pointClass + '>' + escapeHtml(item.level.label) + '</td>' +
+            '<td><input class="compact-input" type="date" value="' + issueValue + '" data-cap-field="issueDate" data-name="' + safeName + '"></td>' +
+            '<td><input class="cap-note-input" type="text" value="' + noteValue + '" data-cap-field="neededNote" data-name="' + safeName + '"></td>' +
+          '</tr>';
+        }).join('');
+        els.capEmpty.classList.toggle('hidden', capRows.length !== 0);
+      }
+
+      function saveCapField(employeeName, field, value) {
+        var setting = getCapSetting(employeeName);
+        setting.name = employeeName;
+        if (field === 'issueDate') {
+          setting.issueDate = normalizeWaveDate(value);
+        }
+        if (field === 'neededNote') {
+          setting.neededNote = toText(value);
+        }
+        saveCapData();
+        renderCap();
+      }
+
+      function bucketEmployeeRows(sourceRows) {
+        var rowSource = Array.isArray(sourceRows) ? sourceRows : filteredRows();
+        var namesByKey = {};
+        rowSource.forEach(function (row) {
+          rememberEmployeeName(namesByKey, row.name, preferredEmployeeDisplayName(row));
+        });
+        Object.keys(buckets).forEach(function (key) {
+          if (buckets[key] && buckets[key].name) rememberEmployeeName(namesByKey, buckets[key].name);
+        });
+
+        return Object.keys(namesByKey).map(function (key) {
+          return namesByKey[key];
+        }).sort(function (a, b) {
+          return a.localeCompare(b, undefined, { sensitivity: 'base' });
+        }).map(function (name) {
+          var key = bucketKey(name);
+          var assigned = rows.filter(function (row) {
+            return (bucketKey(row.name) === key || bucketKey(row.originalName) === key) && row.bucketApplied;
+          }).length;
+          var info = employeeBucketInfo(name);
+          var days = info.totalDays;
+          return {
+            name: name,
+            team: info.team,
+            teamLabel: info.teamLabel,
+            waveDate: info.waveDate,
+            waveDateLabel: info.waveDateLabel,
+            ptoDays: info.ptoDays,
+            atoDays: info.atoDays,
+            days: days,
+            legacyDays: info.legacyDays,
+            assigned: assigned,
+            remaining: days - assigned
+          };
+        });
+      }
+
+      function renderBucket() {
+        var employees = bucketEmployeeRows();
+        els.bucketBody.innerHTML = employees.map(function (item) {
+          var safeName = escapeHtml(item.name);
+          var remainingClass = item.remaining < 0 ? 'text-danger' : 'muted';
+          return '<tr>' +
+            '<td><button class="name-button" type="button" data-bucket-action="view-employee" data-name="' + safeName + '">' + safeName + '</button></td>' +
+            '<td><select class="compact-select" data-bucket-team="' + safeName + '">' + teamSelectOptions(item.team) + '</select></td>' +
+            '<td>' + escapeHtml(item.waveDateLabel || 'Unassigned') + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.ptoDays)) + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.atoDays)) + '</td>' +
+            '<td>' + escapeHtml(formatBucketDays(item.days)) + '</td>' +
+            '<td>' + item.assigned.toLocaleString() + '</td>' +
+            '<td><span class="' + remainingClass + '">' + escapeHtml(formatBucketDays(item.remaining)) + '</span></td>' +
+            '<td><button class="small primary" type="button" data-bucket-action="manage" data-name="' + safeName + '">Manage</button></td>' +
+          '</tr>';
+        }).join('');
+        els.bucketEmpty.classList.toggle('hidden', employees.length !== 0);
+      }
+
+      function render() {
+        rows = rows.map(function (row) {
+          var currentType = normalizeStatusValue(row.type);
+          row.flags = normalizeFlags(row.flags || row.followUp) || [];
+          if (!row.flags.length) row.flags = normalizeFlags([row.statusOverride, row.type]);
+          row.followUp = row.flags[0] || '';
+          row.followUpMonth = row.flags.indexOf('giveback30') !== -1 ? normalizeMonth(row.followUpMonth) : '';
+          row.bucketApplied = Boolean(row.bucketApplied);
+          row.team = normalizeTeam(row.team) || inferTeam(row.sourceFile, row.sourceSheet);
+          row.waveDate = row.team ? teamWaveDate(row.team) : normalizeWaveDate(row.waveDate);
+          row.statusOverride = normalizeStatusValue(row.statusOverride);
+          var automaticStatus = defaultStatus(row);
+          if (!row.statusOverride && currentType && currentType !== automaticStatus && !(isRequestSource(row) && currentType === classify(row.date))) row.statusOverride = currentType;
+          row.type = resolveType(row);
+          row.dateText = row.date ? formatDate(row.date) : row.dateText;
+          row.displayName = row.name;
+          return row;
+        });
+
+        populateFilters();
+        var visibleCount = filteredRows().length;
+        renderStats();
+        renderWaveTeams();
+        renderRecords();
+        renderSummary();
+        renderCap();
+        renderBucket();
+        renderStatus(visibleCount);
+      }
+
+      function setView(view) {
+        activeView = view;
+        var showRecords = activeView === 'records';
+        var showSummary = activeView === 'summary';
+        var showCap = activeView === 'cap';
+        var showBucket = activeView === 'bucket';
+        els.recordsView.classList.toggle('hidden', !showRecords);
+        els.summaryView.classList.toggle('hidden', !showSummary);
+        els.capView.classList.toggle('hidden', !showCap);
+        els.bucketView.classList.toggle('hidden', !showBucket);
+        els.recordsTab.classList.toggle('active', showRecords);
+        els.summaryTab.classList.toggle('active', showSummary);
+        els.capTab.classList.toggle('active', showCap);
+        els.bucketTab.classList.toggle('active', showBucket);
+        els.recordsTab.setAttribute('aria-selected', String(showRecords));
+        els.summaryTab.setAttribute('aria-selected', String(showSummary));
+        els.capTab.setAttribute('aria-selected', String(showCap));
+        els.bucketTab.setAttribute('aria-selected', String(showBucket));
+      }
+
+      function findRow(id) {
+        return rows.find(function (row) {
+          return row.id === id;
+        });
+      }
+
+      function closeAllActionMenus(exceptId) {
+        els.recordsBody.querySelectorAll('[data-action-menu]').forEach(function (menu) {
+          if (exceptId && menu.getAttribute('data-action-menu') === exceptId) return;
+          menu.classList.remove('open');
+        });
+        els.recordsBody.querySelectorAll('[data-action-menu-toggle]').forEach(function (toggle) {
+          if (exceptId && toggle.getAttribute('data-action-menu-toggle') === exceptId) return;
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      function toggleActionMenu(menuId) {
+        var menu = els.recordsBody.querySelector('[data-action-menu="' + menuId + '"]');
+        var toggle = els.recordsBody.querySelector('[data-action-menu-toggle="' + menuId + '"]');
+        if (!menu || !toggle) return;
+        var isOpen = menu.classList.contains('open');
+        closeAllActionMenus(menuId);
+        menu.classList.toggle('open', !isOpen);
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+      }
+
+      function handleRecordAction(button) {
+        var id = button.getAttribute('data-id');
+        var action = button.getAttribute('data-action');
+
+        if (action === 'view-employee') openEmployeeModal(id);
+        if (action === 'edit-occurrence') openOccurrenceModal(id);
+        if (action === 'edit-name') editEmployeeName(id);
+        if (action === 'reset-name') resetEmployeeName(id);
+        if (action === 'edit-status') editStatus(id);
+        if (action === 'reset-status') resetStatus(id);
+        if (action === 'edit-points') editPoints(id);
+        if (action === 'reset-points') resetPoints(id);
+        if (action === 'delete') deleteRecord(id);
+      }
+
+      function handleSummaryAction(button) {
+        var action = button.getAttribute('data-summary-action');
+        var employeeName = button.getAttribute('data-name');
+        if (action === 'view-employee') openEmployeeModalByName(employeeName);
+      }
+
+      function openEmployeeModal(id) {
+        var selected = findRow(id);
+        if (!selected) return;
+        openEmployeeModalByName(selected.name);
+      }
+
+      function employeeOccurrences(employeeName) {
+        var key = bucketKey(employeeName);
+        return rows.filter(function (row) {
+          return bucketKey(row.name) === key || bucketKey(row.originalName) === key;
+        }).sort(function (a, b) {
+          var aTime = a.date ? a.date.getTime() : 0;
+          var bTime = b.date ? b.date.getTime() : 0;
+          return bTime - aTime;
+        });
+      }
+
+      function openEmployeeModalByName(employeeName) {
+        if (!employeeName) return;
+        var occurrences = employeeOccurrences(employeeName);
+        var totalPoints = occurrences.reduce(function (sum, row) {
+          return sum + (Number(row.points) || 0);
+        }, 0);
+        var bucketInfo = employeeBucketInfo(employeeName);
+        var totalBucketDays = bucketInfo.totalDays;
+        var bucketDaysUsed = occurrences.filter(function (row) {
+          return row.bucketApplied;
+        }).length;
+        var pastCount = occurrences.filter(function (row) {
+          return countsAsOccurrence(row);
+        }).length;
+        var pastRequestCount = occurrences.filter(function (row) {
+          return row.type === 'pastrequest';
+        }).length;
+        var futureCount = occurrences.filter(function (row) {
+          return row.type === 'future';
+        }).length;
+
+        els.employeeModalName.value = employeeName;
+        els.employeeModalTitle.textContent = employeeName || 'Employee Occurrences';
+        els.employeeModalSummary.textContent = occurrences.length.toLocaleString() + ' records | ' +
+          pastCount.toLocaleString() + ' occurrences | ' +
+          pastRequestCount.toLocaleString() + ' past requests | ' +
+          futureCount.toLocaleString() + ' future | ' +
+          formatPoints(totalPoints) + ' total points | ' +
+          formatBucketDays(totalBucketDays) + ' total bucket days | ' +
+          formatBucketDays(bucketDaysUsed) + ' bucket days used';
+        els.employeeOccurrencesBody.innerHTML = occurrences.map(function (row) {
+          var flagText = followUpBadge(row.flags, row.followUpMonth) || '<span class="muted">None</span>';
+          if (row.bucketApplied) flagText += ' <span class="badge bucket">Bucket</span>';
+          return '<tr' + rowHighlightClass(row, 'occurrence-row') + ' data-occurrence-id="' + escapeHtml(row.id) + '">' +
+            '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
+            '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
+            '<td>' + flagText + '</td>' +
+            '<td>' + escapeHtml(row.code) + '</td>' +
+            '<td>' + escapeHtml(row.reason) + '</td>' +
+            '<td>' + escapeHtml(row.startTime) + '</td>' +
+            '<td>' + escapeHtml(row.endTime) + '</td>' +
+            '<td>' + escapeHtml(formatPoints(row.points)) + (row.editedPoints ? '<span class="edited">*</span>' : '') + '</td>' +
+            '<td>' + escapeHtml(row.sourceFile) + '</td>' +
+          '</tr>';
+        }).join('');
+        renderEmployeeBucket(employeeName);
+        setEmployeeModalView('occurrences');
+        els.employeeModal.classList.remove('hidden');
+        els.closeEmployeeModalBtn.focus();
+      }
+
+      function closeEmployeeModal() {
+        els.employeeModal.classList.add('hidden');
+        els.employeeModalName.value = '';
+        els.employeeOccurrencesBody.innerHTML = '';
+        els.employeeBucketOccurrencesBody.innerHTML = '';
+      }
+
+      function setEmployeeModalView(view) {
+        var showBucket = view === 'bucket';
+        els.employeeOccurrencesView.classList.toggle('hidden', showBucket);
+        els.employeeBucketView.classList.toggle('hidden', !showBucket);
+        els.employeeOccurrencesTab.classList.toggle('active', !showBucket);
+        els.employeeBucketTab.classList.toggle('active', showBucket);
+        els.employeeOccurrencesTab.setAttribute('aria-selected', String(!showBucket));
+        els.employeeBucketTab.setAttribute('aria-selected', String(showBucket));
+      }
+
+      function renderEmployeeBucket(employeeName) {
+        var occurrences = employeeOccurrences(employeeName);
+        var info = employeeBucketInfo(employeeName);
+        var approved = info.totalDays;
+        var used = occurrences.filter(function (row) {
+          return row.bucketApplied;
+        }).length;
+        els.employeeBucketTeam.value = info.team || '';
+        els.employeeBucketWave.textContent = info.waveDateLabel || 'Unassigned';
+        els.employeeBucketDays.value = formatBucketDays(approved);
+        els.employeeBucketAccrual.textContent = formatBucketDays(info.ptoDays) + ' PTO / ' + formatBucketDays(info.atoDays) + ' ATO';
+        els.employeeBucketSummary.textContent = used.toLocaleString() + ' bucket occurrences | ' +
+          formatBucketDays(approved - used) + ' remaining';
+        els.employeeBucketOccurrencesBody.innerHTML = occurrences.map(function (row) {
+          return '<tr' + rowHighlightClass(row) + '>' +
+            '<td><label class="check-option"><input type="checkbox" data-employee-bucket-row-id="' + escapeHtml(row.id) + '"' + (row.bucketApplied ? ' checked' : '') + '> <span>Use</span></label></td>' +
+            '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
+            '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
+            '<td>' + escapeHtml(row.code) + '</td>' +
+            '<td>' + escapeHtml(row.reason) + '</td>' +
+            '<td>' + escapeHtml(formatPoints(row.points)) + '</td>' +
+          '</tr>';
+        }).join('');
+        els.employeeBucketOccurrencesEmpty.classList.toggle('hidden', occurrences.length !== 0);
+      }
+
+      function saveEmployeeBucketUses() {
+        var employeeName = els.employeeModalName.value;
+        if (!employeeName) return;
+
+        var selected = new Set(Array.from(els.employeeBucketOccurrencesBody.querySelectorAll('input[data-employee-bucket-row-id]:checked')).map(function (input) {
+          return input.getAttribute('data-employee-bucket-row-id');
+        }));
+
+        rows.forEach(function (row) {
+          if (sameEmployeeName(row.name, employeeName) || sameEmployeeName(row.originalName, employeeName)) row.bucketApplied = selected.has(row.id);
+        });
+
+        saveData();
+        render();
+        openEmployeeModalByName(employeeName);
+        setEmployeeModalView('bucket');
+      }
+
+      function openBucketModal(employeeName) {
+        if (!employeeName) return;
+        var key = bucketKey(employeeName);
+        var occurrences = rows.filter(function (row) {
+          return bucketKey(row.name) === key || bucketKey(row.originalName) === key;
+        }).sort(function (a, b) {
+          var aTime = a.date ? a.date.getTime() : 0;
+          var bTime = b.date ? b.date.getTime() : 0;
+          return bTime - aTime;
+        });
+        var info = employeeBucketInfo(employeeName);
+        var approved = info.totalDays;
+        var used = occurrences.filter(function (row) {
+          return row.bucketApplied;
+        }).length;
+
+        els.bucketEmployeeName.value = employeeName;
+        els.bucketModalTitle.textContent = employeeName + ' Bucket';
+        els.bucketModalSummary.textContent = (info.waveDateLabel || 'No wave date') + ' wave date | ' +
+          formatBucketDays(info.ptoDays) + ' PTO | ' +
+          formatBucketDays(info.atoDays) + ' ATO | ' +
+          formatBucketDays(approved) + ' total bucket days | ' +
+          used.toLocaleString() + ' bucket occurrences | ' +
+          formatBucketDays(approved - used) + ' remaining';
+        els.bucketOccurrencesBody.innerHTML = occurrences.map(function (row) {
+          return '<tr' + rowHighlightClass(row) + '>' +
+            '<td><label class="check-option"><input type="checkbox" data-bucket-row-id="' + escapeHtml(row.id) + '"' + (row.bucketApplied ? ' checked' : '') + '> <span>Use</span></label></td>' +
+            '<td>' + escapeHtml(row.dateText || formatDate(row.date)) + '</td>' +
+            '<td><span class="badge ' + escapeHtml(statusBadgeClass(row.type)) + '">' + escapeHtml(statusLabel(row.type)) + '</span></td>' +
+            '<td>' + escapeHtml(row.code) + '</td>' +
+            '<td>' + escapeHtml(row.reason) + '</td>' +
+            '<td>' + escapeHtml(formatPoints(row.points)) + '</td>' +
+          '</tr>';
+        }).join('');
+        els.bucketOccurrencesEmpty.classList.toggle('hidden', occurrences.length !== 0);
+        els.bucketModal.classList.remove('hidden');
+        els.closeBucketModalBtn.focus();
+      }
+
+      function closeBucketModal() {
+        els.bucketModal.classList.add('hidden');
+        els.bucketEmployeeName.value = '';
+        els.bucketOccurrencesBody.innerHTML = '';
+      }
+
+      function saveBucketUses() {
+        var employeeName = els.bucketEmployeeName.value;
+        if (!employeeName) {
+          closeBucketModal();
+          return;
+        }
+
+        var selected = new Set(Array.from(els.bucketOccurrencesBody.querySelectorAll('input[data-bucket-row-id]:checked')).map(function (input) {
+          return input.getAttribute('data-bucket-row-id');
+        }));
+
+        rows.forEach(function (row) {
+          if (sameEmployeeName(row.name, employeeName) || sameEmployeeName(row.originalName, employeeName)) {
+            row.bucketApplied = selected.has(row.id);
+          }
+        });
+
+        saveData();
+        closeBucketModal();
+        render();
+        setView('bucket');
+      }
+
+      function openOccurrenceModal(id) {
+        var row = findRow(id);
+        if (!row) return;
+        closeEmployeeModal();
+        els.occurrenceRowId.value = row.id;
+        els.occurrenceName.value = row.name || '';
+        els.occurrenceDate.value = dateKey(row.date) || '';
+        els.occurrenceStatus.value = row.type || 'past';
+        setSelectedFlags(els.occurrenceFlagInputs, row.flags || row.followUp);
+        els.occurrenceFollowUpMonth.value = row.followUpMonth || '';
+        updateOccurrenceFlagControls();
+        els.occurrenceCode.value = row.code || '';
+        els.occurrenceReason.value = row.reason || '';
+        els.occurrenceStartTime.value = toTimeInputValue(row.startTime);
+        els.occurrenceEndTime.value = toTimeInputValue(row.endTime);
+        els.occurrencePoints.value = String(row.points == null ? 0 : row.points);
+        els.occurrenceModal.classList.remove('hidden');
+        els.occurrenceName.focus();
+      }
+
+      function closeOccurrenceModal() {
+        els.occurrenceModal.classList.add('hidden');
+        els.occurrenceForm.reset();
+        els.occurrenceRowId.value = '';
+        setSelectedFlags(els.occurrenceFlagInputs, []);
+        els.occurrenceFollowUpMonthGroup.classList.add('hidden');
+        els.occurrenceFollowUpMonth.required = false;
+        els.occurrenceFollowUpMonth.value = '';
+      }
+
+      function updateOccurrenceFlagControls() {
+        var needsMonth = selectedFlags(els.occurrenceFlagInputs).indexOf('giveback30') !== -1;
+        els.occurrenceFollowUpMonthGroup.classList.toggle('hidden', !needsMonth);
+        els.occurrenceFollowUpMonth.required = needsMonth;
+        if (!needsMonth) els.occurrenceFollowUpMonth.value = '';
+      }
+
+      function updateManualFlagControls() {
+        var needsMonth = selectedFlags(els.manualFlagInputs).indexOf('giveback30') !== -1;
+        els.manualFlagMonthGroup.classList.toggle('hidden', !needsMonth);
+        els.manualFlagMonth.required = needsMonth;
+        if (!needsMonth) els.manualFlagMonth.value = '';
+      }
+
+      function saveOccurrenceEdit(event) {
+        event.preventDefault();
+        var row = findRow(els.occurrenceRowId.value);
+        if (!row) {
+          closeOccurrenceModal();
+          return;
+        }
+
+        var name = toText(els.occurrenceName.value);
+        var date = parseDate(els.occurrenceDate.value);
+        var points = Number(els.occurrencePoints.value);
+        var statusOverride = normalizeStatusValue(els.occurrenceStatus.value) || classify(date);
+        var flags = selectedFlags(els.occurrenceFlagInputs);
+        var followUpMonth = flags.indexOf('giveback30') !== -1 ? normalizeMonth(els.occurrenceFollowUpMonth.value) : '';
+        if (!name) {
+          alert('Employee name is required.');
+          els.occurrenceName.focus();
+          return;
+        }
+        if (!(date instanceof Date) || isNaN(date)) {
+          alert('A valid date is required.');
+          els.occurrenceDate.focus();
+          return;
+        }
+        if (!Number.isFinite(points)) {
+          alert('Points must be a number.');
+          els.occurrencePoints.focus();
+          return;
+        }
+        if (flags.indexOf('giveback30') !== -1 && !followUpMonth) {
+          alert('Select a flag month for the 30 Day Give Back.');
+          els.occurrenceFollowUpMonth.focus();
+          return;
+        }
+
+        var previousName = row.name;
+        row.name = name;
+        row.displayName = name;
+        row.editedEmployee = row.name !== row.originalName;
+        moveBucketIfNeeded(previousName, name);
+        row.date = date;
+        row.dateText = formatDate(date);
+        row.code = toText(els.occurrenceCode.value);
+        row.reason = toText(els.occurrenceReason.value);
+        row.startTime = formatTime(els.occurrenceStartTime.value);
+        row.endTime = formatTime(els.occurrenceEndTime.value);
+        row.points = points;
+        row.editedPoints = row.points !== row.originalPoints;
+        row.statusOverride = statusOverride;
+        row.flags = flags;
+        row.followUp = flags[0] || '';
+        row.followUpMonth = followUpMonth;
+        row.type = resolveType(row);
+
+        var reopenName = row.name;
+        saveData();
+        closeOccurrenceModal();
+        render();
+        openEmployeeModalByName(reopenName);
+      }
+
+      function editEmployeeName(id) {
+        var row = findRow(id);
+        if (!row) return;
+        openEditModal(row, 'name');
+      }
+
+      function openEditModal(row, field) {
+        var editingName = field === 'name';
+        var editingPoints = field === 'points';
+        var editingStatus = field === 'status';
+        els.editRowId.value = row.id;
+        els.editField.value = field;
+        if (editingName) {
+          els.editModalTitle.textContent = 'Edit Employee Name';
+          els.editValueLabel.textContent = 'Employee Name';
+        }
+        if (editingPoints) {
+          els.editModalTitle.textContent = 'Edit Points';
+          els.editValueLabel.textContent = 'Points';
+        }
+        if (editingStatus) {
+          els.editModalTitle.textContent = 'Edit Status';
+          els.editValueLabel.textContent = 'Status';
+        }
+
+        els.editValue.classList.toggle('hidden', editingStatus);
+        els.editStatusSelect.classList.toggle('hidden', !editingStatus);
+        els.editValue.disabled = editingStatus;
+        els.editStatusSelect.disabled = !editingStatus;
+        els.editValue.type = 'text';
+        if (editingName) {
+          els.editValue.removeAttribute('inputmode');
+        }
+        if (editingPoints) {
+          els.editValue.setAttribute('inputmode', 'decimal');
+        }
+        if (editingName) els.editValue.value = row.name;
+        if (editingPoints) els.editValue.value = String(row.points);
+        if (editingStatus) els.editStatusSelect.value = row.type;
+        els.editModal.classList.remove('hidden');
+        if (editingStatus) {
+          els.editStatusSelect.focus();
+        } else {
+          els.editValue.focus();
+          els.editValue.select();
+        }
+      }
+
+      function closeEditModal() {
+        els.editModal.classList.add('hidden');
+        els.editForm.reset();
+        els.editValue.classList.remove('hidden');
+        els.editStatusSelect.classList.add('hidden');
+        els.editValue.disabled = false;
+        els.editStatusSelect.disabled = true;
+        els.editRowId.value = '';
+        els.editField.value = '';
+      }
+
+      function saveEditModal(event) {
+        event.preventDefault();
+
+        var row = findRow(els.editRowId.value);
+        var field = els.editField.value;
+        if (!row) {
+          closeEditModal();
+          return;
+        }
+
+        if (field === 'name') {
+          saveEmployeeName(row, els.editValue.value);
+          return;
+        }
+
+        if (field === 'points') {
+          savePoints(row, els.editValue.value);
+          return;
+        }
+
+        if (field === 'status') {
+          saveStatus(row, els.editStatusSelect.value);
+        }
+      }
+
+      function saveEmployeeName(row, value) {
+        var next = String(value == null ? '' : value).trim();
+        if (!next) {
+          alert('Employee name cannot be blank.');
+          els.editValue.focus();
+          return;
+        }
+        var previous = row.name;
+        row.name = next;
+        row.displayName = next;
+        row.editedEmployee = row.name !== row.originalName;
+        moveBucketIfNeeded(previous, next);
+        saveData();
+        closeEditModal();
+        render();
+      }
+
+      function resetEmployeeName(id) {
+        var row = findRow(id);
+        if (!row || !row.editedEmployee) return;
+        if (!confirm('Reset employee name back to "' + row.originalName + '"?')) return;
+        var previous = row.name;
+        row.name = row.originalName;
+        row.displayName = row.originalName;
+        row.editedEmployee = false;
+        moveBucketIfNeeded(previous, row.originalName);
+        saveData();
+        render();
+      }
+
+      function editPoints(id) {
+        var row = findRow(id);
+        if (!row) return;
+        openEditModal(row, 'points');
+      }
+
+      function editStatus(id) {
+        var row = findRow(id);
+        if (!row) return;
+        openEditModal(row, 'status');
+      }
+
+      function savePoints(row, value) {
+        var parsed = Number(String(value == null ? '' : value).trim());
+        if (!Number.isFinite(parsed)) {
+          alert('Points must be a number.');
+          els.editValue.focus();
+          return;
+        }
+        row.points = parsed;
+        row.editedPoints = row.points !== row.originalPoints;
+        saveData();
+        closeEditModal();
+        render();
+      }
+
+      function saveStatus(row, statusValue) {
+        if (!isValidStatus(statusValue)) {
+          alert('Please select a valid status.');
+          els.editStatusSelect.focus();
+          return;
+        }
+        row.statusOverride = statusValue;
+        row.type = resolveType(row);
+        saveData();
+        closeEditModal();
+        render();
+      }
+
+      function resetPoints(id) {
+        var row = findRow(id);
+        if (!row || !row.editedPoints) return;
+        if (!confirm('Reset points back to ' + formatPoints(row.originalPoints) + '?')) return;
+        row.points = row.originalPoints;
+        row.editedPoints = false;
+        saveData();
+        render();
+      }
+
+      function resetStatus(id) {
+        var row = findRow(id);
+        if (!row || !row.statusOverride) return;
+        if (!confirm('Reset status back to auto date-based status?')) return;
+        row.statusOverride = '';
+        row.type = resolveType(row);
+        saveData();
+        render();
+      }
+
+      function deleteRecord(id) {
+        var row = findRow(id);
+        if (!row) return;
+        var label = row.name + (row.dateText ? ' on ' + row.dateText : '');
+        if (!confirm('Delete attendance record for ' + label + '?')) return;
+        rows = rows.filter(function (item) {
+          return item.id !== id;
+        });
+        saveData();
+        render();
+      }
+
+      function deleteAgentRecords(employeeName) {
+        var targetKey = bucketKey(employeeName);
+        if (!targetKey) return;
+
+        var keysToDelete = new Set([targetKey]);
+        var recordsToDelete = rows.filter(function (row) {
+          var rowKeys = [bucketKey(row.name), bucketKey(row.originalName)].filter(Boolean);
+          var matches = rowKeys.indexOf(targetKey) !== -1;
+          if (matches) {
+            rowKeys.forEach(function (key) {
+              keysToDelete.add(key);
+            });
+          }
+          return matches;
+        });
+
+        if (!recordsToDelete.length && !buckets[targetKey]) {
+          alert('No records found for ' + employeeName + '.');
+          return;
+        }
+
+        var message = 'Delete all records for ' + employeeName + '?\n\n' +
+          recordsToDelete.length.toLocaleString() + ' attendance record' + (recordsToDelete.length === 1 ? '' : 's') + ' will be removed. ' +
+          'This also removes the agent bucket entry and cannot be undone.';
+        if (!confirm(message)) return;
+
+        rows = rows.filter(function (row) {
+          return !keysToDelete.has(bucketKey(row.name)) && !keysToDelete.has(bucketKey(row.originalName));
+        });
+        keysToDelete.forEach(function (key) {
+          delete buckets[key];
+          delete capSettings[key];
+        });
+
+        saveData();
+        saveBucketData();
+        saveCapData();
+        closeEmployeeModal();
+        render();
+      }
+
+      function exportExcel() {
+        if (!window.XLSX) {
+          alert('The XLSX library did not load. Check your internet connection and try again.');
+          return;
+        }
+
+        if (!rows.length) {
+          alert('There are no records to export.');
+          return;
+        }
+
+        var data = rows.map(function (row) {
+          var bucketInfo = employeeBucketInfo(row.name);
+          return {
+            'Employee Name': row.name,
+            'Original Excel Name': row.originalName,
+            'Wave Team': bucketInfo.teamLabel || teamLabel(row.team),
+            'Wave Date': bucketInfo.waveDate,
+            'Date': row.dateText || formatDate(row.date),
+            'Code': row.code,
+            'Reason': row.reason,
+            'Start Time': row.startTime,
+            'End Time': row.endTime,
+            'Points': row.points,
+            'Original Points': row.originalPoints,
+            'Edited Name?': row.editedEmployee ? 'Yes' : 'No',
+            'Edited Points?': row.editedPoints ? 'Yes' : 'No',
+            'Status': statusLabel(row.type),
+            'Flag': followUpLabel(row.flags, row.followUpMonth),
+            'Flag Month': formatMonthLabel(row.followUpMonth),
+            'Bucket Applied?': row.bucketApplied ? 'Yes' : 'No',
+            'PTO Bucket Days': bucketInfo.ptoDays,
+            'ATO Bucket Days': bucketInfo.atoDays,
+            'Total Bucket Days': bucketInfo.totalDays,
+            'Source File': row.sourceFile,
+            'Source Sheet': row.sourceSheet
+          };
+        });
+
+        var workbook = XLSX.utils.book_new();
+        var sheet = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(workbook, sheet, 'Attendance Records');
+        XLSX.writeFile(workbook, 'attendance-tracker-export.xlsx');
+      }
+
+      function downloadTemplate() {
+        if (!window.XLSX) {
+          alert('The XLSX library did not load. Check your internet connection and try again.');
+          return;
+        }
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var past = new Date(today);
+        past.setDate(today.getDate() - 7);
+        var future = new Date(today);
+        future.setDate(today.getDate() + 14);
+
+        var data = [
+          {
+            'Employee Name': 'Avery Johnson',
+            'Date': formatDate(past),
+            'Code': 'ABS',
+            'Reason': 'Unscheduled absence',
+            'Start Time': '8:00 AM',
+            'End Time': '5:00 PM',
+            'Points': 1,
+            'Wave Team': "Alicia's Team",
+            'Wave Date': '2025-10-01',
+            'Flag': '30 Day Give Back',
+            'Flag Month': formatMonthLabel(dateKey(past))
+          },
+          {
+            'Employee Name': 'Morgan Lee',
+            'Date': formatDate(future),
+            'Code': 'PTO',
+            'Reason': 'Approved vacation request',
+            'Start Time': '9:00 AM',
+            'End Time': '1:00 PM',
+            'Points': 0,
+            'Wave Team': "Taylor's Team",
+            'Wave Date': '2026-05-01',
+            'Flag': '',
+            'Flag Month': ''
+          }
+        ];
+
+        var workbook = XLSX.utils.book_new();
+        var sheet = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(workbook, sheet, 'Attendance');
+        XLSX.writeFile(workbook, 'attendance_template.xlsx');
+      }
+
+      els.fileInput.addEventListener('change', handleFileImport);
+      els.templateBtn.addEventListener('click', downloadTemplate);
+      els.focusManualBtn.addEventListener('click', focusManualForm);
+      els.exportBtn.addEventListener('click', exportExcel);
+      els.dedupeBtn.addEventListener('click', function () { removeDuplicates(true); });
+      els.clearSavedBtn.addEventListener('click', clearSavedData);
+      els.cloudClientIdInput.addEventListener('change', function () {
+        saveCloudConfig();
+        renderCloudOAuthValues();
+        renderCloudStatus();
+      });
+      els.cloudSheetIdInput.addEventListener('change', function () {
+        saveCloudConfig();
+        renderCloudStatus();
+      });
+      els.cloudAutoSyncToggle.addEventListener('change', function () {
+        saveCloudConfig();
+        renderCloudStatus();
+        if (cloudConfig.autoSync) queueCloudSync();
+      });
+      els.copyCloudOriginBtn.addEventListener('click', function () {
+        copyCloudValue(els.cloudOriginValue);
+      });
+      els.copyCloudRedirectBtn.addEventListener('click', function () {
+        copyCloudValue(els.cloudRedirectValue);
+      });
+      els.copyCloudAuthUrlBtn.addEventListener('click', function () {
+        saveCloudConfig();
+        renderCloudOAuthValues();
+        copyCloudValue(els.cloudAuthUrlValue);
+      });
+      els.cloudConnectBtn.addEventListener('click', handleCloudConnect);
+      els.cloudRedirectBtn.addEventListener('click', handleCloudRedirectConnect);
+      els.cloudCreateSheetBtn.addEventListener('click', handleCloudCreateSheet);
+      els.cloudPushBtn.addEventListener('click', handleCloudPush);
+      els.cloudPullBtn.addEventListener('click', handleCloudPull);
+      els.waveTeamForm.addEventListener('submit', saveWaveTeam);
+      els.newWaveTeamBtn.addEventListener('click', resetWaveTeamForm);
+      els.waveTeamsBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-team-action]');
+        if (!button) return;
+        if (button.getAttribute('data-team-action') === 'edit') editWaveTeam(button.getAttribute('data-team-key'));
+      });
+      els.manualForm.addEventListener('submit', addManualRecord);
+      els.manualForm.addEventListener('reset', function () {
+        setTimeout(function () {
+          els.manualPoints.value = '0';
+          els.manualStatusSelect.value = 'past';
+          els.manualTeam.value = '';
+          setSelectedFlags(els.manualFlagInputs, []);
+          els.manualFlagMonth.value = '';
+          updateManualFlagControls();
+        }, 0);
+      });
+      els.editForm.addEventListener('submit', saveEditModal);
+      els.cancelEditBtn.addEventListener('click', closeEditModal);
+      els.editModal.addEventListener('click', function (event) {
+        if (event.target === els.editModal) closeEditModal();
+      });
+      els.closeEmployeeModalBtn.addEventListener('click', closeEmployeeModal);
+      els.deleteAgentBtn.addEventListener('click', function () {
+        deleteAgentRecords(els.employeeModalName.value);
+      });
+      els.employeeModal.addEventListener('click', function (event) {
+        if (event.target === els.employeeModal) closeEmployeeModal();
+      });
+      els.employeeOccurrencesTab.addEventListener('click', function () {
+        setEmployeeModalView('occurrences');
+      });
+      els.employeeBucketTab.addEventListener('click', function () {
+        setEmployeeModalView('bucket');
+      });
+      els.employeeBucketTeam.addEventListener('change', function () {
+        var employeeName = els.employeeModalName.value;
+        if (!employeeName) return;
+        setBucketTeam(employeeName, els.employeeBucketTeam.value);
+        renderEmployeeBucket(employeeName);
+        renderBucket();
+      });
+      els.saveEmployeeBucketBtn.addEventListener('click', saveEmployeeBucketUses);
+      els.occurrenceForm.addEventListener('submit', saveOccurrenceEdit);
+      Array.from(els.manualFlagInputs).forEach(function (input) {
+        input.addEventListener('change', updateManualFlagControls);
+      });
+      Array.from(els.occurrenceFlagInputs).forEach(function (input) {
+        input.addEventListener('change', updateOccurrenceFlagControls);
+      });
+      els.cancelOccurrenceBtn.addEventListener('click', closeOccurrenceModal);
+      els.occurrenceModal.addEventListener('click', function (event) {
+        if (event.target === els.occurrenceModal) closeOccurrenceModal();
+      });
+      els.closeBucketModalBtn.addEventListener('click', closeBucketModal);
+      els.cancelBucketBtn.addEventListener('click', closeBucketModal);
+      els.saveBucketBtn.addEventListener('click', saveBucketUses);
+      els.bucketModal.addEventListener('click', function (event) {
+        if (event.target === els.bucketModal) closeBucketModal();
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !els.editModal.classList.contains('hidden')) {
+          closeEditModal();
+        }
+        if (event.key === 'Escape' && !els.employeeModal.classList.contains('hidden')) {
+          closeEmployeeModal();
+        }
+        if (event.key === 'Escape' && !els.occurrenceModal.classList.contains('hidden')) {
+          closeOccurrenceModal();
+        }
+        if (event.key === 'Escape' && !els.bucketModal.classList.contains('hidden')) {
+          closeBucketModal();
+        }
+        if (event.key === 'Escape') {
+          closeAllActionMenus();
+        }
+      });
+      document.addEventListener('click', function () {
+        closeAllActionMenus();
+      });
+      els.clearFiltersBtn.addEventListener('click', clearFilters);
+      els.searchInput.addEventListener('input', render);
+      els.nameFilter.addEventListener('change', render);
+      els.codeFilter.addEventListener('change', render);
+      els.typeFilter.addEventListener('change', render);
+      els.followUpFilter.addEventListener('change', render);
+
+      document.querySelectorAll('[data-view]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          setView(button.getAttribute('data-view'));
+        });
+      });
+
+      document.querySelectorAll('[data-sort]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          setSort(button.getAttribute('data-sort'));
+        });
+      });
+
+      els.recordsBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-action]');
+        if (!button) return;
+        closeAllActionMenus();
+        handleRecordAction(button);
+      });
+      els.summaryBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-summary-action]');
+        if (!button) return;
+        handleSummaryAction(button);
+      });
+      els.capBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-cap-action]');
+        if (!button) return;
+        if (button.getAttribute('data-cap-action') === 'view-employee') openEmployeeModalByName(button.getAttribute('data-name'));
+      });
+      els.capBody.addEventListener('change', function (event) {
+        var input = event.target.closest('[data-cap-field]');
+        if (!input) return;
+        saveCapField(input.getAttribute('data-name'), input.getAttribute('data-cap-field'), input.value);
+      });
+      els.bucketBody.addEventListener('click', function (event) {
+        var button = event.target.closest('button[data-bucket-action]');
+        if (!button) return;
+        var employeeName = button.getAttribute('data-name');
+        var action = button.getAttribute('data-bucket-action');
+        if (action === 'view-employee') openEmployeeModalByName(employeeName);
+        if (action === 'manage') {
+          openEmployeeModalByName(employeeName);
+          setEmployeeModalView('bucket');
+        }
+      });
+      els.bucketBody.addEventListener('change', function (event) {
+        var select = event.target.closest('select[data-bucket-team]');
+        if (!select) return;
+        setBucketTeam(select.getAttribute('data-bucket-team'), select.value);
+        renderBucket();
+      });
+      els.bucketOccurrencesBody.addEventListener('change', function (event) {
+        var input = event.target.closest('input[data-bucket-row-id]');
+        if (!input) return;
+        var tr = input.closest('tr');
+        if (tr) tr.classList.toggle('bucket-row', input.checked);
+      });
+      els.employeeBucketOccurrencesBody.addEventListener('change', function (event) {
+        var input = event.target.closest('input[data-employee-bucket-row-id]');
+        if (!input) return;
+        var tr = input.closest('tr');
+        if (tr) tr.classList.toggle('bucket-row', input.checked);
+      });
+      els.employeeOccurrencesBody.addEventListener('click', function (event) {
+        var row = event.target.closest('tr[data-occurrence-id]');
+        if (!row) return;
+        openOccurrenceModal(row.getAttribute('data-occurrence-id'));
+      });
+
+      loadTeamData();
+      loadCapData();
+      loadSavedData();
+      loadBucketData();
+      loadCloudConfig();
+      loadCloudToken();
+      renderCloudOAuthValues();
+      els.cloudClientIdInput.value = cloudConfig.clientId;
+      els.cloudSheetIdInput.value = cloudConfig.spreadsheetId;
+      els.cloudAutoSyncToggle.checked = Boolean(cloudConfig.autoSync);
+      var cloudRedirectMessage = consumeCloudRedirectResponse();
+      render();
+      if (cloudRedirectMessage) renderCloudStatus(cloudRedirectMessage);
+      setView(activeView);
+    })();
+  </script>
 </body>
 </html>
